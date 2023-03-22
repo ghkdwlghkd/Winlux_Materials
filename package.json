@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "jszpl": "^1.1.7",
+    "mysql2": "^3.2.0",
+    "net": "^1.0.2",
+    "node-ptouch": "^0.0.4",
+    "path": "^0.12.7",
+    "request": "^2.88.2"
+  }
+}

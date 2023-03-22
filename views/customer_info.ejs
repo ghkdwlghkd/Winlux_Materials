@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>윈럭스</title>
+
+    <!-- Custom fonts for this template -->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">윈럭스</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <%-include('./siderbar.ejs')%>
+
+           
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <form class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </form>
+
+                    <!-- Topbar Search -->
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+
+
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                 <div class="container-fluid">
+
+                    <!-- Page Heading -->    
+
+                    <!-- DataTales Example -->
+               <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">거래처 정보</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+								<form action="/customer_info_delete" name="list_form" id="list_form" method="post">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+										
+                                        <tr>
+											<th style="width:3%;"><input type="checkbox" name="chAll" id="chAll"></th>	
+											<th>No</th>
+                                            <th>거래처 명</th>
+                                            <th>사업자등록번호</th>
+                                            <th>담당자</th>
+											<th>전화번호</th>
+											<th>주소</th>
+											
+											<th>구분</th>
+											<th>상호</th>
+											<th>사업장우편번호</th>
+											<th>사업장상세주소</th>
+											<th>실제우편주소</th>
+											<th>실제주소</th>
+											<th>실제상세주소</th>
+											<th>팩스번호</th>
+											<th>업태</th>
+											<th>종목</th>
+											<th>대표자핸드폰</th>
+											<th>이메일</th>
+											<th style = "width:7%"></th>	
+                                        </tr>
+                                    </thead>
+                         
+                                    <tbody>
+										<% for(var i = 0; i<row.length; i++){ %>
+                                        <tr>
+											<td><input type="checkbox" class="chList" name="chList" value="<%=row[i].no%>"></td>
+											<td class = "td-center"><%=i+1%></td>
+											<td><%=row[i].client_name%></td>
+											<td><%=row[i].business_number%></td>
+											<td><%=row[i].ceo%></td>
+											<td><%=row[i].phone_number%></td>
+											<td><%=row[i].address%></td>
+											<td><%=row[i].type_select%></td>
+											<td><%=row[i].mutual%></td>
+											<td><%=row[i].address1%></td>
+											<td><%=row[i].address2%></td>
+											<td><%=row[i].address3%></td>
+											<td><%=row[i].address4%></td>
+											<td><%=row[i].address5%></td>
+											<td><%=row[i].fax_number%></td>
+											<td><%=row[i].business_type%></td>
+											<td><%=row[i].business_type1%></td>
+											<td><%=row[i].ceo_phone_number%></td>
+											<td><%=row[i].email%></td>
+											<td class = "td-center"><button type = "button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateModal" style="background-color: #17a673;" onclick="update_select(<%=row[i].no%>)">수정</button></td>											
+										</tr>
+										<% } %>
+                                    </tbody>
+                                </table>
+									<div style = "float : right; padding-top : 10px">
+								<button type = "button" class="btn btn-primary " style="background-color: #2e59d9;" data-toggle="modal" data-target="#addModal" onclick="">등록</button>
+								<button type="submit" class="btn btn-danger" style="float:right; background-color: #e74a3b;">삭제</button>
+								</div>
+								 </form>
+								
+                            
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+   <!-- 등록 버튼 모달-->
+	    <div class="modal fade" id="addModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>거래처 등록</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered">
+							  <tbody>
+								<tr>
+								  <th style = "width : 20%">거래처 명</th>
+						 		  <th style = "width : 30%">
+								  <input type="text" class = "form-control" id = "client_name">
+								  </th>
+								  <th class = "width : 25%">사업자등록번호</th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "business_number">
+								  </th>
+								</tr>
+								 <tr>
+									  <th class = "">담당자</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "ceo">
+									  </th>	
+									  <th class = "">전화번호</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "phone_number">
+									  </th>
+								</tr>
+							    <tr> 
+								  <th class = "">주소</th>
+								  <th>
+								  <input type="text" class = "form-control" id = "address" >
+								  </th>	
+								  <th class = "">구분</th>
+								  <th>
+								  <input type="text" class = "form-control" id = "type_select" >
+								  </th>	
+								</tr>
+								 <tr>
+									  <th class = "">상호</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "mutual">
+									  </th>	
+									  <th class = "">사업장우편번호</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "address1">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">사업장상세주소</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "address2">
+									  </th>	
+									  <th class = "">팩스번호</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "fax_number">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">업태</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "business_type">
+									  </th>	
+									  <th class = "">종목</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "business_type1">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">대표자핸드폰</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "ceo_phone_number">
+									  </th>	
+									  <th class = "">이메일</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "email">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">실제주소우편번호</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "address3">
+									  </th>	
+									  <th class = "">실제주소</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "address4">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">실제상세주소</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "address5">
+									  </th>	
+								</tr>
+							  </tbody>
+							</table>
+
+							<div class="box-footer text-center">
+							  <button type="button" class="btn btn-sm btn-primary btn-add-ncr" style="background-color: #2e59d9;" data-ano="" onclick= 'pop_add()'>등록</button>
+							    <button class="btn btn-sm btn-default btn-danger modal_close_btn" style="background-color: #e74a3b;"type="button" data-dismiss="modal">닫기</button>
+								
+							</div>
+
+
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div>
+		<!-- 등록 버튼 모달-->
+	    <div class="modal fade" id="updateModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>거래처 정보 수정</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered">
+							    <tbody>
+								<tr>
+								  <th style = "width : 20%">거래처 명</th>
+						 		  <th style = "width : 30%">
+								  <input type="text" class = "form-control" id = "update_client_name">
+								  </th>
+								  <th class = "width : 25%">사업자등록번호</th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "update_business_number">
+								  </th>
+								</tr>
+								 <tr>
+									  <th class = "">담당자</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "update_ceo">
+									  </th>	
+									  <th class = "">전화번호</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "update_phone_number">
+									  </th>
+								</tr>
+							    <tr> 
+								  <th class = "">주소</th>
+								  <th>
+								  <input type="text" class = "form-control" id = "update_address" >
+								  </th>	
+								  <th class = "">구분</th>
+								  <th>
+								  <input type="text" class = "form-control" id = "update_type_select" >
+								  </th>	
+								</tr>
+								 <tr>
+									  <th class = "">상호</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "update_mutual">
+									  </th>	
+									  <th class = "">사업장우편번호</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "update_address1">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">사업장상세주소</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "update_address2">
+									  </th>	
+									  <th class = "">팩스번호</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "update_fax_number">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">업태</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "update_business_type">
+									  </th>	
+									  <th class = "">종목</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "update_business_type1">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">대표자핸드폰</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "update_ceo_phone_number">
+									  </th>	
+									  <th class = "">이메일</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "update_email">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">실제주소우편번호</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "update_address3">
+									  </th>	
+									  <th class = "">실제주소</th>
+									  <th>
+									  <input type="text" class = "form-control"  id = "update_address4">
+									  </th>
+								</tr>
+								   <tr>
+									  <th class = "">실제상세주소</th>
+									  <th>
+									  <input type="text" class = "form-control" id = "update_address5">
+									  </th>	
+								</tr>
+							  </tbody>
+							</table>
+
+							<div class="box-footer text-center">
+							  <button type="button" class="btn btn-sm btn-primary btn-add-ncr" style="background-color: #2653d4;" data-ano="" onclick= 'update()'>수정</button>
+							  <button class="btn btn-sm btn-default btn-danger modal_close_btn" style="background-color: #e02d1b;" type="button" data-dismiss="modal">닫기</button>
+								
+							</div>
+
+
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/js/demo/datatables-demo.js"></script>
+	<script src="/js/main_contents.js"></script>
+</body>
+
+</html>
+
+
+<script>
+	var all_no = '';
+	
+	function onclick() {
+		$('#client_name').attr('value','');
+		$('#business_number').attr('value','');
+		$('#ceo').attr('value','');
+		$('#phone_number').attr('value','');
+		$('#address').attr('value','');
+		
+		$('#type_select').attr('value','');
+		$('#mutual').attr('value','');
+		$('#address1').attr('value','');
+		$('#address2').attr('value','');
+		$('#address3').attr('value','');
+		$('#address4').attr('value','');
+		$('#address5').attr('value','');
+		$('#fax_number').attr('value','');
+		$('#business_type').attr('value','');
+		$('#business_type1').attr('value','');
+		$('#ceo_phone_number').attr('value','');
+		$('#email').attr('value','');
+	}
+	
+	function pop_add() {		
+		let submit_args = '';
+		submit_args += commonFunc.makeArgs("client_name", $("#client_name").val());
+		submit_args += commonFunc.makeArgs("business_number", $("#business_number").val());
+		submit_args += commonFunc.makeArgs("ceo", $("#ceo").val());
+		submit_args += commonFunc.makeArgs("phone_number", $("#phone_number").val());
+		submit_args += commonFunc.makeArgs("address", $("#address").val());
+		
+		submit_args += commonFunc.makeArgs("type_select", $("#type_select").val());
+		submit_args += commonFunc.makeArgs("mutual", $("#mutual").val());
+		submit_args += commonFunc.makeArgs("address1", $("#address1").val());
+		submit_args += commonFunc.makeArgs("address2", $("#address2").val());
+		submit_args += commonFunc.makeArgs("address3", $("#address3").val());
+		submit_args += commonFunc.makeArgs("address4", $("#address4").val());
+		submit_args += commonFunc.makeArgs("address5", $("#address5").val());
+		submit_args += commonFunc.makeArgs("fax_number", $("#fax_number").val());
+		submit_args += commonFunc.makeArgs("business_type", $("#business_type").val());
+		submit_args += commonFunc.makeArgs("business_type1", $("#business_type1").val());
+		submit_args += commonFunc.makeArgs("ceo_phone_number", $("#ceo_phone_number").val());
+		submit_args += commonFunc.makeArgs("email", $("#email").val());
+		
+		const ret = commonFunc.postArgs("/customer_info_add", submit_args);
+		if(ret == 'y'){
+			alert('등록이 완료 되었습니다.');
+			location.href='/customer_info';
+		}
+	}
+	
+	function update(no) {		
+		let submit_args = '';
+			submit_args += commonFunc.makeArgs("no", all_no);
+			submit_args += commonFunc.makeArgs("client_name", $("#update_client_name").val());
+			submit_args += commonFunc.makeArgs("business_number", $("#update_business_number").val());
+			submit_args += commonFunc.makeArgs("ceo", $("#update_ceo").val());
+			submit_args += commonFunc.makeArgs("phone_number", $("#update_phone_number").val());
+			submit_args += commonFunc.makeArgs("address", $("#update_address").val());
+		
+			submit_args += commonFunc.makeArgs("type_select", $("#update_type_select").val());
+			submit_args += commonFunc.makeArgs("mutual", $("#update_mutual").val());
+			submit_args += commonFunc.makeArgs("address1", $("#update_address1").val());
+			submit_args += commonFunc.makeArgs("address2", $("#update_address2").val());
+			submit_args += commonFunc.makeArgs("address3", $("#update_address3").val());
+			submit_args += commonFunc.makeArgs("address4", $("#update_address4").val());
+			submit_args += commonFunc.makeArgs("address5", $("#update_address5").val());
+			submit_args += commonFunc.makeArgs("fax_number", $("#update_fax_number").val());
+			submit_args += commonFunc.makeArgs("business_type", $("#update_business_type").val());
+			submit_args += commonFunc.makeArgs("business_type1", $("#update_business_type1").val());
+			submit_args += commonFunc.makeArgs("ceo_phone_number", $("#update_ceo_phone_number").val());
+			submit_args += commonFunc.makeArgs("email", $("#update_email").val());
+			const ret = commonFunc.postArgs("/customer_info_update", submit_args);
+			if(ret == 'y'){
+				alert('수정이 완료 되었습니다.');
+				location.href='/customer_info';
+			}
+	
+	}
+	
+	
+	function update_select(no) {
+		all_no = no;
+		let submit_args = '';
+			submit_args += commonFunc.makeArgs("no", no);
+			const ret = commonFunc.postArgs("/customer_info_update_select", submit_args);
+			$('#update_client_name').attr('value',ret[0].client_name);
+			$('#update_business_number').attr('value',ret[0].business_number);
+			$('#update_ceo').attr('value',ret[0].ceo);
+			$('#update_phone_number').attr('value',ret[0].phone_number);
+			$('#update_address').attr('value',ret[0].address);
+		
+			$('#update_type_select').attr('value',ret[0].type_select);
+			$('#update_mutual').attr('value',ret[0].mutual);
+			$('#update_address1').attr('value',ret[0].address1);
+			$('#update_address2').attr('value',ret[0].address2);
+			$('#update_address3').attr('value',ret[0].address3);
+			$('#update_address4').attr('value',ret[0].address4);
+			$('#update_address5').attr('value',ret[0].address5);
+			$('#update_fax_number').attr('value',ret[0].fax_number);
+			$('#update_business_type').attr('value',ret[0].business_type);
+			$('#update_business_type1').attr('value',ret[0].business_type1);
+			$('#update_ceo_phone_number').attr('value',ret[0].ceo_phone_number);
+			$('#update_email').attr('value',ret[0].email);
+		
+	}
+	
+	var check_list = '';
+	  $('#chAll').on('click', function() {
+    if ($(this).prop('checked')) {
+      $('.chList:visible').prop('checked', true);
+    } else {
+      $('.chList:visible').prop('checked', false);
+    }
+  })
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+function modal(id) {
+    var zIndex = 9999;
+    var modal = document.getElementById(id);
+
+    // 모달 div 뒤에 희끄무레한 레이어
+    var bg = document.createElement('div');
+    bg.setStyle({
+        position: 'fixed',
+        zIndex: zIndex,
+        left: '0px',
+        top: '0px',
+        width: '100%',
+        height: '100%',
+        overflow: 'auto',
+        // 레이어 색갈은 여기서 바꾸면 됨
+        backgroundColor: 'rgba(0,0,0,0.4)'
+    });
+    document.body.append(bg);
+
+    // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+    modal.querySelector('.modal_close_btn').addEventListener('click', function() {
+        bg.remove();
+        modal.style.display = 'none';
+    });
+
+    modal.setStyle({
+        position: 'fixed',
+        display: 'block',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+        // 시꺼먼 레이어 보다 한칸 위에 보이기
+        zIndex: zIndex + 1,
+
+        // div center 정렬
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        msTransform: 'translate(-50%, -50%)',
+        webkitTransform: 'translate(-50%, -50%)'
+    });
+}
+
+	document.getElementById('customer_info').style.background='khaki';
+</script>

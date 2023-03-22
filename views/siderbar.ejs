@@ -1,0 +1,55 @@
+			<li class="nav-item">
+				
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>기초 정보</span>
+                </a>
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item" onclick="url_change(id)" id="product_info">제품 정보</a>
+						<a class="collapse-item" onclick="url_change(id)" id="customer_info">거래처 정보</a>
+                    </div>
+                </div>
+				
+				
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>업무 공정</span>
+                </a>
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" onclick="url_change(id)" id="work_log">작업일지</a>
+						<a class="collapse-item" onclick="url_change(id)" id="examination_log">해포검사일지</a>
+						<a class="collapse-item" onclick="url_change(id)" id="day_log">일일검사현황</a>
+                    </div>
+                </div>
+				
+				
+				
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>재고 및 출하</span>
+                </a>
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item" onclick="url_change(id)" id="inventory_manag">재고 현황</a>
+						<a class="collapse-item" onclick="url_change(id)" id="shipment_manag">출하 관리</a>
+						<a class="collapse-item" onclick="url_change(id)" id="shipment_his">출하 현황</a>
+                    </div>
+                </div>
+            </li>
+
+
+
+
+<script>
+	const id_url = '';
+	function url_change(id) {
+		window.location.href = '/'+id
+		id_url = id;
+	};
+	
+</script>
