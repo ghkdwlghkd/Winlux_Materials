@@ -2,15 +2,14 @@
 
 //pm2 start ./pm2-config.json
 //pm2 logs 0
-
+// 테스트
 const express = require("express");
 const app = express();
 var path = require("path");
 const PORT = 3000;
 var fs = require('fs');
 var request = require('request');
-//tset
- 
+
 app.use("/js", express.static(path.join(__dirname, "/js")));
 app.use("/vendor", express.static(path.join(__dirname, "/vendor")));
 app.use("/css", express.static(path.join(__dirname, "/css")));
