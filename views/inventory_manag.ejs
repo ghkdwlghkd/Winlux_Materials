@@ -24,8 +24,9 @@
     <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 	<!--J 쿼리 사용 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</head>
 
+</head>
+<div id="qrcode" style="display: none;" ></div>
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -139,17 +140,19 @@
 											<th style = "width : 10%">제품코드</th>
                                             <th>품명</th>
 											<th>컬러</th>
-                                            <th>수량</th>											
+                                            <th>수량</th>
+											<th style = "width : 10%">QR</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 										<%for(var i = 0; i<row.length;i++){%>
 											<tr>
 											<td><%=i+1%></td>
-											<td><%=row[i].code%></td>
+											<td id="print"><%=row[i].code%></td>
 											<td><%=row[i].item%></td>
 											<td><%=row[i].color%></td>
 											<td><%=row[i].o_qty%></td>
+											<td><%=row[i].qr%></td>
 											
 										</tr>
 										<%}%>
@@ -185,7 +188,6 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -223,6 +225,8 @@
     <!-- Page level custom scripts -->
     <script src="/js/demo/datatables-demo.js"></script>
 	<script src="/js/main_contents.js"></script>
+	<script src="/js/qrcode.js" charset="utf-8" type="text/javascript"></script>
+	<script src="/js/scan.js" charset="utf-8" type="text/javascript"></script>
 </body>
 
 </html>
@@ -230,8 +234,47 @@
 
 <script>
 
+	// 출력
+	function printPage(){
+	 var initBody;
+	 window.onbeforeprint = function(){
+	  initBody = document.body.innerHTML;
+	  document.body.innerHTML =  document.getElementById('qrcode').innerHTML;
+	 };
+	 window.onafterprint = function(){
+	  document.body.innerHTML = initBody;
+	 };
+	 window.print();
+	 return false;
+}
+	
+// 	// QR 코드에 담을 데이터
+//   var data = '1679650388500';
+
+//   // QR 코드 생성
+//   var qrcode = new QRCode(document.getElementById('qrcode'), {
+//     text: encodeURIComponent(data),
+//     width: 600,
+//     height: 600,
+//     colorDark: '#000000',
+//     colorLight: '#ffffff',
+//     correctLevel: QRCode.CorrectLevel.H
+//   });
+
 	
 	
+//  스케너	
+$(document).scannerDetection({ 
+	timeBeforeScanTest: 200, // wait for the next character for upto 200ms 
+	startChar: [120], // Prefix character for the cabled scanner (OPL6845R) 
+	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected 
+	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms 
+	onComplete: function(barcode, qty){
+		console.log(barcode)
+		alert(barcode); // 바코드 출력 
+
+	}
+}); 
 	
 	document.getElementById('inventory_manag').style.background='khaki';
 </script>

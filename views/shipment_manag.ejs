@@ -27,6 +27,8 @@
 </head>
 
 <body id="page-top">
+	
+<!-- QR 담는 프론트영역	  -->
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -140,8 +142,7 @@
                                             <th>품명</th>
 											<th>컬러</th>
                                             <th>수량</th>
-											<th></th>
-											
+											<th style = "width : 10%">QR번호</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -152,7 +153,9 @@
 											<td><%=row[i].item%></td>
 											<td><%=row[i].color%></td>
 											<td><%=row[i].o_qty%></td>
-											<td class = "td-center"><button type = "button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addModal" style="background-color: #17a673;" onclick="ship_add(<%=row[i].code%>)">출하</button></td>											
+											<td><button onclick="qr_insert(<%=row[i].qr%>).then(printPage)" class="form-control"><%=row[i].qr%></button></td>		<input type="hidden"id ="qr" value="<%=row[i].qr%>">
+											
+											
 										</tr>
 										<%}%>
 										
@@ -168,7 +171,7 @@
             </div>
             <!-- End of Main Content -->
 
-			<div class="modal fade" id="addModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal fade" id="addModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div id="model_view_10">
@@ -201,7 +204,7 @@
 								  </th>
 								</tr>
 							    <tr>
-									<th class = "">재고</th>
+									<th class = "">수량</th>
 								  <th>
 								  <input type="text" class = "form-control"  id = "o_qty" disabled>
 								  </th>
@@ -212,9 +215,9 @@
 									
 								</tr>
 								  <tr> 
-								  <th class = "">출하 수량</th>
+								 <th class = "">출하 날짜</th>
 								  <th>
-								  <input type="text" class = "form-control"  id = "shipment_qty">
+								  <input class="form-control"  type='date' id='shipment_date' onchange="" value=''/>
 								  </th>
 								  <th class = "">거래처명</th>
 								  <th>
@@ -230,9 +233,9 @@
 								  
 								  <tr> 
 									  
-									   <th class = "">출하 날짜</th>
+									   <th class = "">전화번호</th>
 								  <th>
-								  <input class="form-control"  type='date' id='shipment_date' onchange="" value=''/>
+								  <input type="text" class = "form-control"  id = "phone_number" disabled>
 								  </th>
 								 
 									<th class = "">주소</th>
@@ -246,10 +249,7 @@
 								  <th>
 								  <input type="text" class = "form-control"  id = "ceo" disabled>
 								  </th>
-									<th class = "">전화번호</th>
-								  <th>
-								  <input type="text" class = "form-control"  id = "phone_number" disabled>
-								  </th>
+									
 								</tr>
 								  
 								  
@@ -275,6 +275,13 @@
 				</div>
             </div>
         </div>
+   		</div>
+			
+		<div class="modal fade" id="qrModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div role="document">
+				<button onclick="printPage()" class="form-control">출력</button>
+				<div id="qrcode"></div>
+			</div>
    		</div>
 			
             <!-- Footer -->
@@ -335,13 +342,15 @@
     <!-- Page level custom scripts -->
     <script src="/js/demo/datatables-demo.js"></script>
 	<script src="/js/main_contents.js"></script>
+	<script src="/js/qrcode.js"></script>
+	<script src="/js/scan.js"></script>
 </body>
 
 </html>
 
 
 <script>
-
+ 
 	
 	function ship_add(code) {
 		let submit_args = '';
@@ -372,13 +381,13 @@
 		submit_args += commonFunc.makeArgs("code", $("#code").val());
 		submit_args += commonFunc.makeArgs("item", $("#item").val());
 		submit_args += commonFunc.makeArgs("o_qty", $("#o_qty").val());
-		submit_args += commonFunc.makeArgs("shipment_qty", $("#shipment_qty").val());
 		submit_args += commonFunc.makeArgs("color", $("#color").val());
 		submit_args += commonFunc.makeArgs("client_name", $("#client_name").val());
 		submit_args += commonFunc.makeArgs("ceo", $("#ceo").val());
 		submit_args += commonFunc.makeArgs("phone_number", $("#phone_number").val());
 		submit_args += commonFunc.makeArgs("address", $("#address").val());
 		submit_args += commonFunc.makeArgs("shipment_date", $("#shipment_date").val());
+		submit_args += commonFunc.makeArgs("qr", $("#qr").val());
 		const ret = commonFunc.postArgs("/shipment_add", submit_args);
 		if(ret == 'y'){
 			alert('등록이 완료 되었습니다.');
@@ -390,6 +399,76 @@
 		}
 		
 	}
+	
+	/*콜백함수 시작
+		버튼 이벤트에 .then(다음함수) 를 해야 콜백함수 실행가능
+		예) onclick="qr_insert(vla).then(printPage)"
+	*/
+	
+	//버튼 클릭시 실행
+function qr_insert(val) {
+  return new Promise(function(resolve, reject) {
+	  
+	  // QR 생성
+   var qrcode = new QRCode(document.createElement('div'), {
+		text: val+"",
+		width: 600,
+		height: 600,
+		colorDark: '#000000',
+		colorLight: '#ffffff',
+		correctLevel: QRCode.CorrectLevel.H
+	  	});
+		// QR 코드를 새로운 div 요소에 추가
+		var qrWrapper = document.createElement('div');
+		qrWrapper.appendChild(qrcode._el);
+
+		// QR 코드를 화면에 추가
+		document.getElementById('qrcode').appendChild(qrWrapper);
+    setTimeout(function() {
+      resolve();
+    }, 500); // 0.5 초 후 다음 함수 실행
+  });
+}
+
+	// 윈도우 프린트 실행
+function printPage() {
+	 var initBody;
+	 window.onbeforeprint = function(){
+	  initBody = document.body.innerHTML;
+	  document.body.innerHTML =  document.getElementById('qrcode').innerHTML;
+	 };
+	 window.onafterprint = function(){
+	  document.body.innerHTML = initBody;
+	 };
+	 window.print();
+	document.getElementById('qrcode').innerHTML = '';
+	 return false;	
+}
+
+	
+	
+	
+	
+	
+	
+//  스케너 src="/js/scan.js"
+$(document).scannerDetection({
+	timeBeforeScanTest: 200, // wait for the next character for upto 200ms 
+	startChar: [120], // Prefix character for the cabled scanner (OPL6845R) 
+	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected 
+	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms 
+	onComplete: function(barcode, qty){
+		
+		let submit_args = '';
+		submit_args += commonFunc.makeArgs("qr", barcode);
+		const ret = commonFunc.postArgs("/shipment_processing", submit_args);
+		alert(barcode+' 출하 완료');
+		location.href='/shipment_manag';
+		
+	}
+	
+}); 
+	
 	
 	
 	document.getElementById('shipment_manag').style.background='khaki';

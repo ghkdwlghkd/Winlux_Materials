@@ -56,6 +56,12 @@ app.listen(PORT, "0.0.0.0", () => {
 console.log(`server started on PORT ${PORT} // ${new Date()}`);
 });
 
+// DB커넥트 끊키는거 막기 위함
+setInterval(refreshWedges, 36000);
+async function refreshWedges() {
+   let row = await asyncQuery(`SELECT * from winlux_materials.today limit 0`);
+}
+
 
 app.get("/", async (req, res) => {
 
@@ -65,6 +71,9 @@ res.render("tables")
 app.get("/test", async (req, res) => {
 res.render("test")
 });
+
+
+
 
 // 작업일지 메인
 app.get("/work_log", async (req, res) => {
@@ -419,6 +428,7 @@ app.get("/day_log", async (req, res) => {
 										a.item ,
 										a.machine_no,
 										a.o_qty,
+										a.o_qty_old,
 										a.x_qty,
 										a.etc2,
 										a.manufacturing_time,
@@ -454,7 +464,8 @@ app.get("/day_log", async (req, res) => {
 app.post("/day_log_save", async (req, res) => {
 	let option = await asyncQuery(`
 									UPDATE winlux_materials.work_option
-									SET 
+									SET
+									o_qty_old = '${req.body.o_qty_old}',
 									o_qty = '${req.body.oqty_sum}',
 									x_qty = '${req.body.x_qty}',
 									etc2 = '${req.body.etc2}',
@@ -462,25 +473,26 @@ app.post("/day_log_save", async (req, res) => {
 									day_log_time = '보류'
 									where no = '${req.body.no}'
 						`)
-	
-	let INSERT = await asyncQuery(`
+	var oqty_ar = req.body.oqty_arr.split(',');
+	for(var i = 0; i<oqty_ar.length; i++){
+		var new_qr = new Date().getTime();
+		let INSERT = await asyncQuery(`
 									INSERT INTO winlux_materials.shipment_info(
+									qr,
 									code,
 									item,
 									color,
 									o_qty
 									)
 									VALUES (
+									'${new_qr}',
 									'${req.body.code}',
 									'${req.body.item}',
 									'${req.body.color}',
-									'${req.body.oqty_sum}'
+									'${oqty_ar[i]}'
 									)
-						`)
-	
-	
-
-
+		`)
+	}
 res.send('y');
 });
 
@@ -626,19 +638,16 @@ app.post("/customer_info_delete", async (req, res) => {
 app.get("/inventory_manag", async (req, res) => {
 	let row = await asyncQuery(`
 								select 
+										qr,
 										item,
 										color,
-										o_qty,
+										sum(o_qty) as o_qty ,
 										code,
 										no
 									from winlux_materials.shipment_info as a
-									where o_qty not in('0')
+									where yn = 'n'
+									group by item,color
 									`)
-	
-	
-	
-	
-	
 res.render("inventory_manag",{row:row})
 });
 
@@ -648,6 +657,7 @@ app.get("/shipment_manag", async (req, res) => {
 									select 
 										*
 									from winlux_materials.shipment_info
+									where yn = 'n'
 									
 									`)
 	let customer = await asyncQuery(`
@@ -669,44 +679,34 @@ app.post("/client_name_post", async (req, res) => {
 	res.send(row);
 });
 
-app.post("/shipment_add", async (req, res) => {
-	
-	
-	if(`${req.body.o_qty}`>=`${req.body.shipment_qty}`){
-		var qty = `${req.body.o_qty}`-`${req.body.shipment_qty}`;	
-		console.log(`${req.body.o_qty}`)
-		console.log(`${req.body.shipment_qty}`)
-		let row = await asyncQuery(`		
-						INSERT INTO winlux_materials.shipment_his (
-						item,
-						color,
-						code,
-						shipment_date,
-						shipment_qty,
-						client_name
-						)
-						VALUES (
-						'${req.body.item}',
-						'${req.body.color}',
-						'${req.body.code}',
-						'${req.body.shipment_date}',
-						'${req.body.shipment_qty}',
-						'${req.body.client_name}'
-						);
-					`);
-		let UPDATE = await asyncQuery(`		
-						UPDATE winlux_materials.shipment_info 
-						set o_qty = '${qty}'
-						where code = '${req.body.code}'
-					`);
-	}else{
-		res.send('수량이 부족합니다.');
-	}
-	
-	
-	
-	res.send('y');
-});
+// app.post("/shipment_add", async (req, res) => {
+// 	let row = await asyncQuery(`		
+// 						INSERT INTO winlux_materials.shipment_his (
+// 						item,
+// 						color,
+// 						code,
+// 						shipment_date,
+// 						shipment_qty,
+// 						client_name,
+// 						qr
+// 						)
+// 						VALUES (
+// 						'${req.body.item}',
+// 						'${req.body.color}',
+// 						'${req.body.code}',
+// 						'${req.body.shipment_date}',
+// 						'${req.body.o_qty}',
+// 						'${req.body.client_name}',
+// 						'${req.body.qr}'
+// 						);
+// 					`);
+// 		let UPDATE = await asyncQuery(`		
+// 						UPDATE winlux_materials.shipment_info 
+// 						set yn = 'y'
+// 						where qr = '${req.body.qr}'
+// 					`);
+// 	res.send('y');
+// });
 
 
 //기준 정보 >> 제품 정보
@@ -795,11 +795,27 @@ app.post("/ship_add_select", async (req, res) => {
 
 
 app.get("/shipment_his", async (req, res) => {
-	
 	let row = await asyncQuery(`
 									select 
-										*
-									from winlux_materials.shipment_his
+										code,
+										item,
+										color,
+										o_qty,
+										qr,
+										shipment_time
+									from winlux_materials.shipment_info
+									where yn = 'y'
 									`)
 res.render("shipment_his",{row:row})
+});
+
+
+app.post("/shipment_processing", async (req, res) => {
+	let row = await asyncQuery(`
+								UPDATE winlux_materials.shipment_info
+									SET yn='y',
+										shipment_time = now()
+									WHERE qr = '${req.body.qr}'
+									`);
+	res.send(row);
 });

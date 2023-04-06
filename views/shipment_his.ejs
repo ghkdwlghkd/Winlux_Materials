@@ -139,8 +139,9 @@
 											<th style = "width : 10%">제품코드</th>
                                             <th>품명</th>
 											<th>컬러</th>
-											<th>납품처</th>
                                             <th>수량</th>
+											<th>QR번호</th>
+											<th>출하일</th>
 											
                                         </tr>
                                     </thead>
@@ -151,8 +152,9 @@
 											<td><%=row[i].code%></td>
 											<td><%=row[i].item%></td>
 											<td><%=row[i].color%></td>
-											<td><%=row[i].client_name%></td>
-											<td><%=row[i].shipment_qty%></td>
+											<td><%=row[i].o_qty%></td>
+											<td><%=row[i].qr%></td>
+											<td><%=row[i].shipment_time%></td>
 										</tr>
 										<%}%>
 										

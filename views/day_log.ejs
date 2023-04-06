@@ -168,7 +168,7 @@
 												<td style = 'text-align: center; width: 5%;'><%=row[i].item%></td>
 												<td style = 'text-align: center; width: 5%;'><%=row[i].machine_no%></td>
 												<td style = 'text-align: center; width: 10%;'><%=row[i].dateTime%></td>
-												<td style = 'text-align: center; width: 20%;'><input class="form-control" id ="o_qty_<%=row[i].no%>" value="<%=row[i].o_qty%>" <%if(row[i].state>3){ %>disabled<% }%>></td>
+												<td style = 'text-align: center; width: 10%; display: revert;'><input class="form-control" id ="o_qty_<%=row[i].no%>" value="<%=row[i].o_qty_old%>" <%if(row[i].state>3){ %>disabled<% }%>><h1><%=row[i].o_qty%></h1></td>
 												<td style = 'text-align: center; width: 13%;'><input class="form-control" id ="etc2_<%=row[i].no%>" value="<%=row[i].etc2%>" <%if(row[i].state>3){ %>disabled<% }%>></td>
 												<%if(row[i].state == '4'){%>
 													<td style = 'text-align: center; width: 6%;'><button class="form-control" onclick='day_log_save(<%=row[i].no%>,`<%=row[i].item%>`,`<%=row[i].code%>`,`<%=row[i].color%>`)' disabled>완료</button></td>
@@ -260,7 +260,9 @@
 	function day_log_save(no,item,code,color){
 		var oqty_arr = [];
 		var oqty_sum = 0;
+		var o_qty_old = $(`#o_qty_${no}`).val();
 		var oqty = $(`#o_qty_${no}`).val().trim();
+		
 		
 		oqty_arr = oqty.split('/');
 		
@@ -275,11 +277,12 @@
 			submit_args += commonFunc.makeArgs("item", item);
 			submit_args += commonFunc.makeArgs("code", code);
 			submit_args += commonFunc.makeArgs("color", color);
-			submit_args += commonFunc.makeArgs("o_qty", $(`#o_qty_${no}`).val());
+			submit_args += commonFunc.makeArgs("o_qty_old", $(`#o_qty_${no}`).val());
 			submit_args += commonFunc.makeArgs("oqty_sum", oqty_sum);
 			submit_args += commonFunc.makeArgs("x_qty", $(`#x_qty_${no}`).val());
 			submit_args += commonFunc.makeArgs("etc2", $(`#etc2_${no}`).val());
 			submit_args += commonFunc.makeArgs("day_log_time", $(`#dateTime`).val());
+			submit_args += commonFunc.makeArgs("oqty_arr", oqty_arr);
 			const ret = commonFunc.postArgs("/day_log_save", submit_args);
 			if(ret == 'y'){
 				alert('등록 완료');
