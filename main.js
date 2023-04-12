@@ -6,7 +6,7 @@
 const express = require("express");
 const app = express();
 var path = require("path");
-const PORT = 3000;
+const PORT = 443;
 var fs = require('fs');
 var request = require('request');
 
@@ -25,7 +25,7 @@ app.set("views", path.join(__dirname, "views"));
 
 const mysql2 = require("mysql2/promise");
 const _pool = mysql2.createPool({
-host: "61.76.6.163",
+host: "ekfkawnl.synology.me",
 user: "root",
 password: "root",
 port: "49153",
@@ -427,6 +427,7 @@ app.get("/day_log", async (req, res) => {
 										a.dateTime ,
 										a.item ,
 										a.machine_no,
+										a.qty,
 										a.o_qty,
 										a.o_qty_old,
 										a.x_qty,
@@ -443,57 +444,91 @@ app.get("/day_log", async (req, res) => {
 									where a.state in('3','4')
 									order by a.updateTime DESC 
 									`)
-			if(row==""){
-				const happyNewYear = new Date();
-				const year = happyNewYear.getFullYear();
-				const month = happyNewYear.getMonth() + 1;
-				const date = happyNewYear.getDate();
-				var y = year;
-				var m = month >= 10 ? month : '0'+month;
-				var d = date >= 10 ? date : '0' + date;
-				var full_day = y + "-" + m + "-" + d;
-				var arr= [{manufacturing_time: full_day,no:'x'}]
-				res.render("day_log",{row:arr})
-			}
-			else{
-				res.render("day_log",{row:row})		
-			}
+									
+res.render("day_log",{row:row})		
+		
+});
+
+app.get("/day_log/:no", async (req, res) => {
+	page = req.params.no;
+	let row = await asyncQuery(`
+									SELECT
+									a.no,
+									a.dateTime ,
+									a.item ,
+									a.machine_no,
+									a.qty,
+									a.o_qty,
+									a.o_qty_old,
+									a.x_qty,
+									a.etc2,
+									a.manufacturing_time,
+									a.state,
+									a.color,
+									a.manufacturing_qty,
+									b.code
+								from winlux_materials.work_option as a
+								inner join winlux_materials.product_info as b
+								on a.color = b.color 
+								and a.item = b.item 
+								where a.state in('3','4')
+								order by a.updateTime DESC 
+								`)
+								let his = await asyncQuery(`
+								select * from winlux_materials.shipment_info si 
+								where option_key = ${req.params.no}
+								order by updateTime DESC 
+								`)
+res.render("day_log_no",{row:row,
+				  his:his,
+				page:page})		
+	
 });
 
 // 일일 검사 현황 등록 버튼
 app.post("/day_log_save", async (req, res) => {
-	let option = await asyncQuery(`
-									UPDATE winlux_materials.work_option
-									SET
-									o_qty_old = '${req.body.o_qty_old}',
-									o_qty = '${req.body.oqty_sum}',
-									x_qty = '${req.body.x_qty}',
-									etc2 = '${req.body.etc2}',
-									state = '4',
-									day_log_time = '보류'
-									where no = '${req.body.no}'
-						`)
-	var oqty_ar = req.body.oqty_arr.split(',');
-	for(var i = 0; i<oqty_ar.length; i++){
-		var new_qr = new Date().getTime();
-		let INSERT = await asyncQuery(`
-									INSERT INTO winlux_materials.shipment_info(
-									qr,
-									code,
-									item,
-									color,
-									o_qty
-									)
-									VALUES (
-									'${new_qr}',
-									'${req.body.code}',
-									'${req.body.item}',
-									'${req.body.color}',
-									'${oqty_ar[i]}'
-									)
-		`)
+	var qty1 = req.body.manufacturing_qty
+	var qty2 = req.body.o_qty_old
+	var qty = qty1-qty2;
+	if(qty < 0){
+		res.send('n');
 	}
-res.send('y');
+	else{
+		let option = await asyncQuery(`
+										UPDATE winlux_materials.work_option
+										SET
+										o_qty_old = '${req.body.o_qty_old}',
+										o_qty = '${req.body.oqty_sum}',
+										x_qty = '${req.body.x_qty}',
+										etc2 = '${req.body.etc2}',
+										day_log_time = '보류',
+										manufacturing_qty = '${qty}'
+										where no = '${req.body.no}'
+							`)
+			var new_qr = new Date().getTime();
+			let INSERT = await asyncQuery(`
+										INSERT INTO winlux_materials.shipment_info(
+										qr,
+										code,
+										item,
+										color,
+										option_key,
+										o_qty,
+										etc
+										)
+										VALUES (
+										'${new_qr}',
+										'${req.body.code}',
+										'${req.body.item}',
+										'${req.body.color}',
+										'${req.body.no}',
+										'${req.body.o_qty_old}',
+										'${req.body.etc2}'
+										)
+			`)
+			res.send('y');
+		}
+
 });
 
 // 거래처 정보

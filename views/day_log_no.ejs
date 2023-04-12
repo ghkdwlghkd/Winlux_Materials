@@ -150,7 +150,7 @@
                                     </thead>
                                     <tbody>
 										<%for(var i = 0; i<row.length; i++){%>
-											<tr id='tr_id<%=i%>'>
+											<tr id='tr_id<%=row[i].no%>'>
 												<td style = 'text-align: center; width: 3%;'><%=i+1%></td>
 												<td style = 'text-align: center; width: 8%;'><%=row[i].manufacturing_time%></td>
 												<td style = 'text-align: center; width: 8%;'><%=row[i].qty%></td>
@@ -167,6 +167,33 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div id = "new_table">
+                            <div class="card-body" style="width: 50%;">
+                                <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>no</th>
+                                        <th>검사완료수량</th>
+                                        <th>비고</th>
+                                        <th>QR</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% for(var i = 0; i < his.length; i++) { %>
+                                    <tr>
+                                        <td style='text-align: center; width: 3%;'><%=i+1%></td>
+                                        <td style='text-align: center; width: 8%;'><%=his[i].o_qty%></td>
+                                        <td style='text-align: center; width: 8%;'><%=his[i].etc%></td>
+                                        <td style='text-align: center; width: 8%;'><button onclick="qr_insert(<%=his[i].qr%>).then(printPage)" class="form-control"><%=his[i].qr%></button></td>		<input type="hidden"id ="qr" value="<%=his[i].qr%>">
+                                    </tr>
+                                    <% } %>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>`;
+
                         </div>
                     </div>
 
@@ -216,7 +243,14 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="qrModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div role="document">
+            <button onclick="printPage()" class="form-control">출력</button>
+            <div id="qrcode"></div>
+        </div>
+       </div>
 
+       
     <!-- Bootstrap core JavaScript-->
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -234,13 +268,17 @@
     <!-- Page level custom scripts -->
     <script src="/js/demo/datatables-demo.js"></script>
 	<script src="/js/main_contents.js"></script>
+	<script src="/js/qrcode.js"></script>
+	<script src="/js/scan.js"></script>
 </body>
 
 </html>
 
 
 <script>
-	
+
+    const myIdElement = document.getElementById(`tr_id<%=page%>`).style.backgroundColor = "#ebfffc";
+
 	function day_log_save(no,item,code,color){
         alert($(`#manufacturing_qty_${no}`).val())
 		//var oqty_arr = [];
@@ -264,7 +302,7 @@
 			const ret = commonFunc.postArgs("/day_log_save", submit_args);
 			if(ret == 'y'){
 				alert('등록 완료');
-				location.href='/day_log';
+				location.href='/day_log/<%=page%>';
 			}
 
             if(ret == 'n'){
@@ -283,19 +321,49 @@
 	}
 	
     function tr_click(i,row,no){
-        // 전체 비활성화
-        for(var j = 0; j<row; j++){
-            const myIdElement = document.getElementById(`tr_id${j}`);
-		myIdElement.style.backgroundColor = "white";   
-        }
-
-        // 클릭한 row 백그라운드 변경
-        const myIdElement = document.getElementById(`tr_id${i}`);
-		myIdElement.style.backgroundColor = "#ebfffc";
-
         location.href='/day_log/'+no;
+    }
+    
+    function qr_insert(val) {
+        return new Promise(function(resolve, reject) {
+	  
+	  // QR 생성
+   var qrcode = new QRCode(document.createElement('div'), {
+		text: val+"",
+		width: 600,
+		height: 600,
+		colorDark: '#000000',
+		colorLight: '#ffffff',
+		correctLevel: QRCode.CorrectLevel.H
+	  	});
+		// QR 코드를 새로운 div 요소에 추가
+		var qrWrapper = document.createElement('div');
+		qrWrapper.appendChild(qrcode._el);
 
-            }
+		// QR 코드를 화면에 추가
+		document.getElementById('qrcode').appendChild(qrWrapper);
+    setTimeout(function() {
+      resolve();
+    }, 500); // 0.5 초 후 다음 함수 실행
+  });
+}
+
+
+	// 윈도우 프린트 실행
+    function printPage() {
+	 var initBody;
+	 window.onbeforeprint = function(){
+	  initBody = document.body.innerHTML;
+	  document.body.innerHTML =  document.getElementById('qrcode').innerHTML;
+	 };
+	 window.onafterprint = function(){
+	  document.body.innerHTML = initBody;
+	 };
+	 window.print();
+	document.getElementById('qrcode').innerHTML = '';
+	 return false;	
+}
+
 
 
 
