@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <%-include('../include/title.ejs')%>
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+	
+<style>
+    #my_modal {
+        display: none;
+        width: 600px;
+        padding: 20px 60px;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        border-radius: 3px;
+    }
+
+    #my_modal .modal_close_btn {
+        top: 10px;
+        right: 10px;
+    }
+	
+	
+	#input_id {
+	  font-size: 18px;
+	  padding: 5px;
+	  /* height: 35px; */
+	  /* width: 350px;   */
+	  outline: none;
+	  border-radius: 5px;  		
+      font-size: 1rem;
+      font-weight: 400;		
+	/*   border-bottom: none; */
+	}
+	#input_id2 {
+	  font-size: 18px;
+	  padding: 5px;
+	  /* height: 35px; */
+	  /* width: 350px;   */
+	  outline: none;
+	  border-radius: 5px;  		
+      font-size: 1rem;
+      font-weight: 400;		
+	/*   border-bottom: none; */
+	}	
+	
+	datalist {	  
+  position: absolute;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 0 0 5px 5px;
+  border-top: none;  
+  width: 202px;
+  padding: 5px;
+  /* max-height: 10rem; */
+  overflow-y: auto;
+	}
+
+	option {	  
+	  padding: 4px;  
+	  margin-bottom: 1px;
+	   font-size: 18px;
+	  cursor: pointer;
+	}
+
+	option:hover,  .active{
+	  background-color: #4169E1;
+      color:white;
+	}
+	
+	#dataTable > th{
+		
+	}
+</style>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <%-include('../include/brand.ejs')%>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+			<!-- 위즈윅 메뉴 -->
+			
+			 <%-include('../include/siderbar.ejs')%>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+               <%-include('../include/topbar.ejs')%>
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">수주등록</h1>
+                    
+
+                    <!-- DataTales Example -->
+               		<div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">수주등록</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+								<form action="/order_add_delete" name="list_form" id="list_form" method="post">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>										
+                                        <tr>
+											<th style="width:3%;"><input type="checkbox" name="chAll" id="chAll"></th>	
+											<th style="width:7%;">No</th>
+											<th>수주번호</th>
+											<th>품목명</th>
+											<th>수량</th>
+                                            <th>발주처</th>
+                                            <th>발주담당자</th>
+											<th>발주일</th>
+											<th>납기요청일</th>
+											<th>제작 공정</th>
+											<th>발주 내용</th>											
+											<th style= "display:none"></th>
+                                        </tr>
+                                    </thead>
+                         
+                                    <tbody>
+										<% for(var i = 0; i<row.length; i++){ %>
+                                        <tr>
+											<td><input type="checkbox" class="chList" name="chList" value="<%=row[i].no%>" class = "td-center"></td>
+											<td class = "td-center"><%=i+1%></td>
+											<td class = "td-center"><%=row[i].order_key%></td>
+											<th class = "td-center"><%=row[i].item%></th>
+											<td class = "td-center"><%=row[i].qty%></td>
+											<td class = "td-center"><%=row[i].order_place%></td>
+											<td class = "td-center"><%=row[i].order_manager%></td>
+											<td class = "td-center"><%=row[i].order_time%></td>
+											<td class = "td-center"><%=row[i].shipment_time%></td>
+											<td class = "td-center"><%=row[i].process%></td>
+											<td class = "td-center"><%=row[i].order_content%></td> 																		
+											<td class = "td-center" style= "display:none"><button type = "button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateModal" onclick="update_select(<%=row[i].no%>)">수정</button></td>
+										</tr>
+										<% } %>
+                                    </tbody>
+                                </table>
+									<div style = "float : right; padding-top : 10px">
+								<button type = "button" class="btn btn-primary " data-toggle="modal" data-target="#addModal" >등록</button>&nbsp;&nbsp;
+								<button type = "button" class="btn btn-primary btn-danger" style="float:right;" onclick="checkMessage()">삭제</button>
+								</div>
+								 </form>
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+									
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+		
+
+	<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- 등록 버튼 모달-->
+	<div class="modal fade" id="addModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>수주 등록</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered">
+							  <tbody>
+								<tr>
+								  <th style = "width : 20%">발주처</th>
+						 		  <th style = "width : 30%">
+									  <fieldset>
+									  <input autocomplete="off" class="form-control" type="text" name="browsers" list="" id="input_id" role="combobox" placeholder="발주처를 선택해 주세요.">
+									  <datalist id="browsers" role="" onclick="selectCustomer()">
+										  <option selected disabled>발주처를 선택해주세요.</option>
+										  <%for(var i = 0; i<customer_info.length; i++){ %>
+										  		<option><%=customer_info[i].client_name%></option>
+									   	 <%}%>
+									  </datalist>											  
+									  </fieldset>
+									<!-- <select id = "company_name_select" onchange="selectNum()" class = "form-control">
+										<option value="" selected disabled>발주처를 선택해주세요.</option> 
+										 <%for(var i = 0; i<customer_info.length; i++){ %>
+											<option value="<%=customer_info[i].no%>"><%=customer_info[i].client_name%></option>
+									   	 <%}%>
+									</select>							   -->																	  
+								  </th>
+								  <th class = "width : 25%"> 담당자</th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "order_manager" disabled>
+								  </th>
+								</tr>
+								  
+								 <tr>
+								  <th class = "">발주일</th>
+								  <th>
+								  <input type="date" class = "form-control"  id = "order_time">
+								  </th>
+								  <th class = "">납기일</th>
+								  <th>
+								  <input type="date" class = "form-control"  id = "shipment_time">
+								  </th>
+								</tr>
+								   
+								<tr>
+								  <th class = "">품목명</th>
+								  <th>								  
+									  <fieldset>
+									  <input autocomplete="off" class="form-control" type="text" name="browsers2" list="" id="input_id2" role="combobox" placeholder="품목을 선택해 주세요.">
+									  <datalist id="browsers2" role="" >
+										  <option selected disabled>품목을 선택해주세요.</option>
+										  <%for(var i = 0; i<product.length; i++){ %>
+										  		<option><%=product[i].item%></option>
+									   	 <%}%>
+									  </datalist>											  
+									  </fieldset>									  
+								  </th>
+								  <th class = "">수량</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "qty"
+									oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+								  >
+								  </th>
+								</tr>
+								  
+								<tr>
+									<input type="hidden" class = "form-control"  id = "process">
+								  <th  style = "width : 20%">제작공정</th>
+						 		   <th colspan="3">
+									   <%for(var i = 0; i<process.length; i++){ %>
+											<button id = "process_name_<%=i%>" style="float: left; margin-left:3px;" type="button" class="btn btn-sm btn-primary-off btn-add-ncr" data-ano="" onclick= "setClassName(<%=i%>,'<%=process[i].process%>',<%=process.length%>)"><%=process[i].process%></button>   
+									   <%}%>
+								   </th>
+								</tr>
+								  <tr>
+								  <th class = "width : 25%">발주 내용</th>
+								  <th colspan="3" style = "width : 25%">
+								  <input type="text" class = "form-control" id = "order_content">
+								  </th>
+								</tr>
+							  </tbody>
+							</table>
+
+							<div class="box-footer text-center">
+								<button type="button" class="btn btn-sm btn-primary btn-add-ncr" data-ano="" onclick= 'pop_add()'>등록</button>&nbsp;&nbsp;
+								<button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" data-dismiss="modal">닫기</button>								
+							</div>
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   	</div>
+	
+	<script src="js/main_contents.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+	
+</body>
+
+</html>
+
+
+<script>	
+	// 등록버튼 클릭 시 >> 발주일 오늘 날짜로 자동입력됨
+    document.getElementById('order_time').value = new Date().toISOString().substring(0, 10);	
+	var all_no = '';
+	var process = '';
+	var company_name = '';
+	var company_name2 = '';
+	
+	// 체크박스 ALL / NOT ALL
+	var check_list = '';
+	  $('#chAll').on('click', function() {
+    if ($(this).prop('checked')) {
+      $('.chList:visible').prop('checked', true);
+    } else {
+      $('.chList:visible').prop('checked', false);
+    }
+    })	
+	
+	// 수주등록 > 등록버튼
+	function pop_add() {
+		var select_item = document.getElementById("input_id2");
+		company_name2 = select_item.value; 				
+		var result = confirm("수주등록 하시겠습니까?");		
+		if(result){	//등록 시작
+		
+		let process_arr = process.split(',');
+		let process_select = '';
+		let submit_args = '';
+		submit_args += commonFunc.makeArgs("process_select", 1);
+		const ret = commonFunc.postArgs("/by_facility_sort", submit_args);
+		
+		for(let i=0; i<ret.length; i++){			
+			for(let j=0; j<process_arr.length; j++){
+				if(ret[i].process==process_arr[j]){					
+					process_select += (process_arr[j]+',');
+				}				
+			}
+		}				
+			
+		if(company_name!="" && $("#order_time").val()!="" && $("#shipment_time").val()!="" && $("#item").val()!="" && $("#qty").val()!="" ){
+			if($("#order_time").val()>$("#shipment_time").val()){
+			alert("납기일은 발주일 이후로 등록해주세요");
+			}else{
+				let submit_args = '';
+				submit_args += commonFunc.makeArgs("order_place", company_name);
+				submit_args += commonFunc.makeArgs("order_manager", $("#order_manager").val());
+				submit_args += commonFunc.makeArgs("order_time", $("#order_time").val());
+				submit_args += commonFunc.makeArgs("shipment_time", $("#shipment_time").val());
+				submit_args += commonFunc.makeArgs("process", process_select);
+				submit_args += commonFunc.makeArgs("order_content", $("#order_content").val());
+				submit_args += commonFunc.makeArgs("item", company_name2);
+				submit_args += commonFunc.makeArgs("qty", $("#qty").val());
+				const ret = commonFunc.postArgs("/order_add_add", submit_args);
+				if(ret == 'y'){
+					alert('등록이 완료 되었습니다.');
+					location.href='/order_add';
+				}
+				else if (ret == 'n'){
+					alert('등록된 품목명을 작성해주세요.')		
+				}
+			}
+		}else{
+			alert("모든 항목을 입력해주세요.");
+		}
+		}else{
+			
+		}
+	}
+	
+	// 수주등록 수정
+	// function update(no) {
+	// 	let submit_args = '';
+	// 		submit_args += commonFunc.makeArgs("no", all_no);
+	// 		submit_args += commonFunc.makeArgs("order_place", $("#order_place").val());
+	// 		submit_args += commonFunc.makeArgs("order_manager", $("#order_manager").val());
+	// 		submit_args += commonFunc.makeArgs("order_time", $("#order_time").val());
+	// 		submit_args += commonFunc.makeArgs("shipment_time", $("#shipment_time").val());
+	// 		submit_args += commonFunc.makeArgs("process", $("#process").val());
+	// 		submit_args += commonFunc.makeArgs("order_content", $("#order_content").val());
+	// 		submit_args += commonFunc.makeArgs("item", $("#item").val());
+	// 		submit_args += commonFunc.makeArgs("qty", $("#qty").val());
+	// 		const ret = commonFunc.postArgs("/order_add_update", submit_args);
+	// 		if(ret == 'y'){
+	// 			alert('수정이 완료 되었습니다.');
+	// 			location.href='/order_add';
+	// 		}
+	
+	// }
+	
+	// 수주등록 수정버튼 클릭 시 >> 해당 ROW 조회
+	// function update_select(no) {
+	// 	all_no = no;
+	// 	let arr = [];
+	// 	let submit_args = '';
+	// 		submit_args += commonFunc.makeArgs("no", no);
+	// 		const ret = commonFunc.postArgs("/order_add_update_select", submit_args);
+	// 		$('#update_order_place').attr('value',ret[0].order_place);
+	// 		$('#update_order_manager').attr('value',ret[0].order_manager);
+	// 		$('#update_order_time').attr('value',ret[0].order_time);
+	// 		$('#update_shipment_time').attr('value',ret[0].shipment_time);
+	// 		$('#update_process').attr('value',ret[0].process);
+	// 		$('#update_order_content').attr('value',ret[0].order_content);
+	// 		$('#update_item').attr('value',ret[0].item);
+	// 		$('#update_qty').attr('value',ret[0].qty);
+	// 		arr = ret[0].process.split('')
+	// 		console.log(arr)
+	// }
+	
+	// 수주등록 SELECTOT OPTIONS 기능으로 사용시
+	// function selectNum(){	  
+	// 	// alert("11111");
+	// 	// var langSelect = document.getElementById("input_id");
+	// 	// // select element에서 선택된 option의 value가 저장된다.
+	// 	// var selectValue = langSelect.options[langSelect.selectedIndex].value;
+	// 	// let submit_args = '';
+	// 	// 	submit_args += commonFunc.makeArgs("index", selectValue);
+	// 	// 	const ret = commonFunc.postArgs("/order_add_select_num", submit_args);
+	// 	// $('#order_manager').attr('value',ret[0].ceo);
+	// 	// company_name = ret[0].client_name;
+	// }
+	// 클래스 이름 설정/변경
+	// function setClassName(index, process_details) {
+	// 	if(document.getElementById('process_name_'+index).classList == 'btn btn-sm btn-primary-off btn-add-ncr'){
+	// 	  	document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary btn-add-ncr';
+	// 		process += process_details
+	// 	 } else{
+	// 		 document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary-off btn-add-ncr';
+	// 		 var str = process_details;
+	// 		 process = process.replace(str, '')
+	// 	 }
+	// }
+	
+	//제작공정 버튼 ON / OFF
+	function setClassName(index, process_details,length) {
+		if(document.getElementById('process_name_'+index).classList == 'btn btn-sm btn-primary-off btn-add-ncr'){
+			document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary btn-add-ncr';
+			process += (process_details+",");
+		 } else{
+			 document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary-off btn-add-ncr';
+			 var str = process_details;
+			 process = process_details.replace(str, '')
+		 }
+	}
+	
+	// 모달창
+	function modal(id) {
+		var zIndex = 9999;
+		var modal = document.getElementById(id);
+
+		// 모달 div 뒤에 희끄무레한 레이어
+		var bg = document.createElement('div');
+		bg.setStyle({
+			position: 'fixed',
+			zIndex: zIndex,
+			left: '0px',
+			top: '0px',
+			width: '100%',
+			height: '100%',
+			overflow: 'auto',
+			// 레이어 색갈은 여기서 바꾸면 됨
+			backgroundColor: 'rgba(0,0,0,0.4)'
+		});
+		document.body.append(bg);
+
+		// 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+		modal.querySelector('.modal_close_btn').addEventListener('click', function() {
+			bg.remove();
+			modal.style.display = 'none';
+		});
+
+		modal.setStyle({
+			position: 'fixed',
+			display: 'block',
+			boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+			// 시꺼먼 레이어 보다 한칸 위에 보이기
+			zIndex: zIndex + 1,
+
+			// div center 정렬
+			top: '50%',
+			left: '50%',
+			transform: 'translate(-50%, -50%)',
+			msTransform: 'translate(-50%, -50%)',
+			webkitTransform: 'translate(-50%, -50%)'
+		});
+	}
+
+	// Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+	Element.prototype.setStyle = function(styles) {
+		for (var k in styles) this.style[k] = styles[k];
+		return this;
+	};
+
+
+	// 발주처 datalist 검색기능 시작
+	input_id.onfocus = function () {
+	  browsers.style.display = 'block';
+	  input_id.style.borderRadius = "5px 5px 0 0";  
+	};
+	for (let option of browsers.options) {
+	  option.onclick = function () {
+		input_id.value = option.value;
+		browsers.style.display = 'none';
+		input_id.style.borderRadius = "5px";
+	  }
+	};
+
+	input_id.oninput = function() {
+	  currentFocus = -1;
+	  var text = input_id.value.toUpperCase();
+	  for (let option of browsers.options) {
+		if(option.value.toUpperCase().indexOf(text) > -1){
+		  option.style.display = "block";
+	  }else{
+		option.style.display = "none";
+		}
+	  };
+	}
+	var currentFocus = -1;
+	input_id.onkeydown = function(e) {
+	  if(e.keyCode == 40){
+		currentFocus++
+	   addActive(browsers.options);
+	  }
+	  else if(e.keyCode == 38){
+		currentFocus--
+	   addActive(browsers.options);
+	  }
+	  else if(e.keyCode == 13){
+		e.preventDefault();
+			if (currentFocus > -1) {
+			  /*and simulate a click on the "active" item:*/
+			  if (browsers.options) browsers.options[currentFocus].click();
+			}
+	  }
+	}
+
+	function addActive(x) {
+		if (!x) return false;
+		removeActive(x);
+		if (currentFocus >= x.length) currentFocus = 0;
+		if (currentFocus < 0) currentFocus = (x.length - 1);
+		x[currentFocus].classList.add("active");
+	  }
+	  function removeActive(x) {
+		for (var i = 0; i < x.length; i++) {
+		  x[i].classList.remove("active");
+		}
+	 }
+	// 발주처 datalist 검색기능 끝
+	
+	
+	// 품목 datalist 검색기능 시작
+	input_id2.onfocus = function () {
+	  browsers2.style.display = 'block';
+	  input_id2.style.borderRadius = "5px 5px 0 0";  
+	};
+	for (let option of browsers2.options) {
+	  option.onclick = function () {
+		input_id2.value = option.value;
+		browsers2.style.display = 'none';
+		input_id2.style.borderRadius = "5px";
+	  }
+	};
+
+	input_id2.oninput = function() {
+	  currentFocus = -1;
+	  var text = input_id2.value.toUpperCase();
+	  for (let option of browsers2.options) {
+		if(option.value.toUpperCase().indexOf(text) > -1){
+		  option.style.display = "block";
+	  }else{
+		option.style.display = "none";
+		}
+	  };
+	}
+	var currentFocus = -1;
+	input_id2.onkeydown = function(e) {
+	  if(e.keyCode == 40){
+		currentFocus++
+	   addActive(browsers2.options);
+	  }
+	  else if(e.keyCode == 38){
+		currentFocus--
+	   addActive(browsers2.options);
+	  }
+	  else if(e.keyCode == 13){
+		e.preventDefault();
+			if (currentFocus > -1) {
+			  /*and simulate a click on the "active" item:*/
+			  if (browsers2.options) browsers2.options[currentFocus].click();
+			}
+	  }
+	}
+
+	function addActive(x) {
+		if (!x) return false;
+		removeActive(x);
+		if (currentFocus >= x.length) currentFocus = 0;
+		if (currentFocus < 0) currentFocus = (x.length - 1);
+		x[currentFocus].classList.add("active");
+	  }
+	  function removeActive(x) {
+		for (var i = 0; i < x.length; i++) {
+		  x[i].classList.remove("active");
+		}
+	 }
+	// 품목 datalist 검색기능 끝	
+	
+	
+	
+	// 삭제 버튼 클릭 시
+	function checkMessage(){
+		var result = confirm("삭제 하시겠습니까?");
+		if(result){	//등록 시작						
+			document.getElementById('list_form').submit();
+		}else{			
+			
+		}
+	}	
+	
+	// 발주처 선택시 담당자 자동입력 시작
+	function selectCustomer(){
+		// var select_item = document.getElementById('input_id');
+		// var select_item_Value = select_item.value; 
+		//alert("select_item_Value:" + select_item_Value);
+				
+		var select_item = document.getElementById("input_id");
+		var langSelect = select_item.value; 
+				
+		let submit_args = '';
+		submit_args += commonFunc.makeArgs("index", langSelect);
+		const ret = commonFunc.postArgs("/order_add_select_num", submit_args);
+		
+		$('#order_manager').attr('value',ret[0].ceo);		
+		input_id.value = ret[0].client_name;
+		company_name = ret[0].client_name;
+	}
+	// 발주처 선택시 담당자 자동입력 끝
+	
+	// 품목 선택시 담당자 자동입력 시작
+	function selectCustomer2(){
+		// var select_item = document.getElementById('input_id');
+		// var select_item_Value = select_item.value; 
+		//alert("select_item_Value:" + select_item_Value);
+				
+		var select_item = document.getElementById("input_id2");
+		company_name2 = select_item.value; 
+	}
+	// 품목 선택시 담당자 자동입력 끝	
+	
+	// 해당 sidebar에 노란색 음영표시
+	document.getElementById('order_add').style.background='khaki';
+</script>

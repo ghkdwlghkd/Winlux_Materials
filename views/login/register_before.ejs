@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+
+		<title>SB Admin 2 - Register</title>
+
+		<!-- Custom fonts for this template-->
+		<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+			rel="stylesheet"
+		/>
+
+		<!-- Custom styles for this template-->
+		<link href="css/sb-admin-2.min.css" rel="stylesheet" />
+	</head>
+
+	<body class="bg-gradient-primary">
+		<div class="container">
+			<div class="card o-hidden border-0 shadow-lg my-5">
+				<div class="card-body p-0">
+					<!-- Nested Row within Card Body -->
+					<div class="row">
+						<!-- <div class="col-lg-5 d-none d-lg-block bg-register-image"></div> -->
+						<div class="col-lg-7" style="margin: auto;">
+							<div class="p-5">
+								<div class="text-center">
+									<h1 class="h2 text-gray-900 mb-4">대경 MES 회원가입</h1>
+									<br /><br /><br />
+								</div>
+								<!-- <form class="user"> -->
+
+								<div class="form-group row">
+									<div class="col-sm-61 mb-3 mb-sm-0">
+										<input
+											type="text"
+											class="form-control form-control-user"
+											id="employee_code"
+											name="employee_code"
+											placeholder="사원번호"
+										/>
+									</div>
+									<div class="col-sm-6">
+										<div class="col-search-button">
+											<button
+												class="btn btn-primary btn-user btn-block"
+												onclick="emp_check()"
+											>
+												사원번호 중복확인
+											</button>
+										</div>
+									</div>
+									<div class="col-sm-60 mb-3 mb-sm-0" style="margin: 5px 10px;">
+										<span id="emp_codeMessage" style="color: red;"></span>
+										<span id="emp_codeMessage2" style="color: green;"></span>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-60 mb-3 mb-sm-0">
+										<input
+											type="password"
+											class="form-control form-control-user"
+											id="pass"
+											name="pass"
+											placeholder="비밀번호"
+										/>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-60">
+										<input
+											type="password"
+											class="form-control form-control-user"
+											id="pass2"
+											name="pass2"
+											placeholder="비밀번호 확인"
+										/>
+									</div>
+								</div>
+								<div class="col-sm-60 mb-3 mb-sm-0" style="margin: 5px 10px;">
+									<span id="pass_Message" style="color: red;"></span>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-60 mb-3 mb-sm-0">
+										<input
+											type="text"
+											class="form-control form-control-user"
+											id="name"
+											name="name"
+											placeholder="이름"
+										/>
+									</div>
+								</div>
+								<div class="col-sm-60 mb-3 mb-sm-0" style="margin: 5px 10px;">
+									<span id="name_Message" style="color: red;"></span>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-60 mb-3 mb-sm-0">
+										<input
+											type="text"
+											class="form-control form-control-user"
+											id="department"
+											name="department"
+											placeholder="부서"
+										/>
+									</div>
+								</div>
+								<div class="col-sm-60 mb-3 mb-sm-0" style="margin: 5px 10px;">
+									<span id="department_Message" style="color: red;"></span>
+								</div>
+								<br /><br /><br />
+								<hr />
+								<button
+									class="btn btn-success btn-block btn-flat"
+									type="submit"
+									id="submit_all"
+								>
+									회원가입 신청
+								</button>
+
+								<!-- </form>                          -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/main_contents.js"></script>
+		<!-- Bootstrap core JavaScript-->
+		<script src="vendor/jquery/jquery.min.js"></script>
+		<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+		<!-- Core plugin JavaScript-->
+		<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+		<!-- Custom scripts for all pages-->
+		<script src="js/sb-admin-2.min.js"></script>
+
+		<!-- Page level plugins -->
+		<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+		<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+		<!-- Page level custom scripts -->
+		<script src="js/demo/datatables-demo.js"></script>
+	</body>
+</html>
+
+<script type="text/javascript">
+	let empdbCheck = false;
+	let passCheck = false;
+	let nameCheck = false;
+	let departCheck = false;
+
+	// 사원코드 중복 확인
+	function emp_check() {
+		if ($('#employee_code').val() != '') {
+			$('#emp_codeMessage').show();
+			$('#emp_codeMessage2').show();
+			let submit_args = '';
+			submit_args += commonFunc.makeArgs('employee_code', $('#employee_code').val());
+			const emp_check = commonFunc.postArgs('/emp_check', submit_args);
+
+			if (emp_check == 'ok') {
+				$('#emp_codeMessage').hide();
+				$('#emp_codeMessage2').html('사용가능한 사원번호입니다.');
+				empdbCheck = true;
+			} else {
+				$('#emp_codeMessage2').hide();
+				$('#emp_codeMessage').html('중복된 사원번호입니다.');
+			}
+		} else {
+			$('#emp_codeMessage').html('사원코드를 입력해주세요!');
+		}
+	}
+
+	// 비밀번호 동일 확인
+	function fnpassCheck() {
+		let pass1 = $('#pass').val();
+		let pass2 = $('#pass2').val();
+
+		if (pass1 != '' && pass2 != '' && pass1 == pass2) {
+			passCheck = true;
+			return;
+		} else {
+		}
+	}
+
+	// 회원가입 요청
+	$('#submit_all').on('click', function () {
+		if ($('#employee_code').val() == '') {
+			$('#emp_codeMessage').html('사원코드를 입력해주세요!');
+		} else if (empdbCheck == false) {
+			$('#emp_codeMessage').html('중복확인을 해주세요!');
+		} else {
+			$('#emp_codeMessage').hide();
+			$('#emp_codeMessage2').hide();
+			fnpassCheck();
+			if ($('#pass').val() == '') {
+				$('#pass_Message').html('비밀번호를 입력해주세요');
+			} else if (passCheck == false) {
+				$('#pass_Message').html('비밀번호가 일치하지 않습니다.');
+			} else {
+				$('#pass_Message').hide();
+				if ($('#name').val() == '') {
+					$('#name_Message').html('이름을 입력해 주세요');
+				} else {
+					$('#name_Message').hide();
+					nameCheck = true;
+					if ($('#department').val() == '') {
+						$('#department_Message').html('부서를 입력해 주세요');
+					} else {
+						$('#department_Message').hide();
+						departCheck = true;
+					}
+				}
+			}
+		}
+
+		if (empdbCheck == true && passCheck == true && nameCheck == true && departCheck == true) {
+			let submit_args = '';
+			submit_args += commonFunc.makeArgs('employee_code', $('#employee_code').val());
+			submit_args += commonFunc.makeArgs('pass', $('#pass').val());
+			submit_args += commonFunc.makeArgs('name', $('#name').val());
+			submit_args += commonFunc.makeArgs('department', $('#department').val());
+			const ret = commonFunc.postArgs('/submit_All', submit_args);
+
+			if (ret == 'ok') {
+				alert('회원가입이 완료 되었습니다.');
+				location.href = '/login';
+			} else {
+				alert('db 오류');
+			}
+		} else {
+			console.log('입력 에러');
+		}
+	});
+</script>

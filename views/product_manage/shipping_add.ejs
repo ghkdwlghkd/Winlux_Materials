@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <%-include('../include/title.ejs')%>
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+	
+<style>
+    #my_modal {
+        display: none;
+        width: 600px;
+        padding: 20px 60px;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        border-radius: 3px;
+    }
+
+    #my_modal .modal_close_btn {
+        top: 10px;
+        right: 10px;
+    }
+</style>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <%-include('../include/brand.ejs')%>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+			<!-- 위즈윅 메뉴 -->
+			
+			 <%-include('../include/siderbar.ejs')%>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+               <%-include('../include/topbar.ejs')%>
+
+                <!-- End of Topbar -->
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">출하등록</h1>
+                    
+
+                <!-- DataTales Example -->
+               <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">출하등록</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+								<form action="/order_add_delete" name="list_form" id="list_form" method="post">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>										
+                                        <tr>
+											<th style="width:7%;">No</th>
+											<th>수주번호</th>
+											<th>품목명</th>
+											<th>납품수량</th>
+											<th>발주처</th>
+                                            <th>발주일</th>
+                                            <th>납기일</th>											
+											<th>주문내용</th>
+											<th></th>											
+                                        </tr>
+                                    </thead>
+                         
+                                    <tbody>
+										<% for(var i = 0; i<shipping_order.length; i++){ %>
+                                        <tr>
+											<td class = "td-center"><%=i+1%></td>
+											<td class = "td-center"><%=shipping_order[i].order_key%></td>											
+											<td class = "td-center"><%=shipping_order[i].item%></td>
+											<td class = "td-center"><%=shipping_order[i].qty%></td>
+											<td class = "td-center"><%=shipping_order[i].order_place%></td>											
+											<td class = "td-center"><%=shipping_order[i].order_time%></td>											
+											<td class = "td-center"><%=shipping_order[i].shipment_time%></td>												
+											<td class = "td-center"><%=shipping_order[i].order_content%></td>	
+											<%  if (shipping_order[i].state == 5) { %>		
+											<td class = "td-center"><button type = "button" class="btn btn-success " data-toggle="modal" data-target="#addModal" onclick="pop_on('<%=shipping_order[i].order_key%>',<%=shipping_order[i].qty%>)">출하</button></td>	
+												<!-- <td class = "td-center"><button type = "button" class="btn btn-sm btn-success" data-target="#" onclick="Fn_shipping_run('<%=shipping_order[i].order_key%>',<%=shipping_order[i].qty%>)">출하</button></td> -->
+											<% }else if(shipping_order[i].state == 6){ %>
+												<td class = "td-center"><button type = "button" class="btn btn-sm btn-success"  style = "background-color: #D3D3D3;border-color: #D3D3D3;" disabled>출하완료</button></td>												
+											<% } %>	
+										</tr>
+										<% } %>
+                                    </tbody>
+                                </table>
+								 </form>
+								
+                            
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+			
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+		
+
+	<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+		<!-- 출하 모달-->
+	    <div class="modal fade" id="addModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>출하</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered">
+							  <tbody>
+							
+								  
+					
+								   <tr>
+									  <th>수주 번호</th>
+									  <th style = "width : 25%">
+									 	  <input type="text" class = "form-control" id = "pop_order_key" disabled>
+									  </th>
+								 </tr>
+								  
+								 <tr>
+									  <th>납품 수량</th>
+									  <th style = "width : 25%">
+									 	  <input type="text" class = "form-control" id = "pop_order_qty" disabled>
+									  </th>
+								 </tr>
+					
+								  <tr>
+									  <th style = "width : 10%">출하 내용</th>
+									  <th colspan="4" style = "width : 25%">
+									  <input type="text" class = "form-control" id = "ship_coment">
+
+									  </th>
+								 </tr>
+							  </tbody>
+							</table>
+							<div class="box-footer text-center">
+							  	<button type = "button" class="btn btn-sm btn-primary" data-target="#" onclick="Fn_shipping_run()">출하</button>
+							    <button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" data-dismiss="modal">닫기</button>
+							</div>
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div>
+	
+	
+	<script src="js/main_contents.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+	
+</body>
+
+</html>
+
+
+<script>	
+	// 출하시작 버튼 클릭 시
+	function Fn_shipping_run() {
+		
+		 var order_key = $('#pop_order_key').val();
+		 var qty = $("#pop_order_qty").val();
+		
+		var result = confirm("출하 하시겠습니까?");
+		if(result){	//등록시작		
+			let submit_args = '';	
+			submit_args += commonFunc.makeArgs("order_key", order_key);
+			submit_args += commonFunc.makeArgs("qty", qty);
+			submit_args += commonFunc.makeArgs("state", 6);			
+			submit_args += commonFunc.makeArgs("ship_coment", $("#ship_coment").val());
+			const ret = commonFunc.postArgs("/shipping_run", submit_args);
+			
+			let sh_key = 'SH' + ret[0].no;			
+			console.log("sh_key:" + sh_key);
+			
+			if(ret[0].no!=''){			
+			console.log("22222222sh_key:" + sh_key);
+			let submit_args2 = '';	
+			submit_args2 += commonFunc.makeArgs("order_key", order_key);
+			submit_args2 += commonFunc.makeArgs("sh_key", sh_key);			
+			
+			const ret = commonFunc.postArgs("/shipping_run_update", submit_args2);
+				if(ret=='y'){
+				alert("출하를 완료했습니다.");
+				location.href='/shipping_add';
+				}else{	
+				}
+			}
+		}	
+	}
+	
+	function pop_on(order_key,qty){
+		$('#pop_order_key').attr('value',order_key);
+		$('#pop_order_qty').attr('value',qty);
+	}
+	
+document.getElementById('shipping_add').style.background='khaki';
+	
+</script>

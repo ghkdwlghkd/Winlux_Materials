@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <%-include('../include/title.ejs')%>
+    <!-- Custom fonts for this template -->
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+	<link href="../css/main_contents.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom styles for this page -->
+    <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+	<script type="text/javascript" src="/lib/smarteditor2-2.8.2.3/js/HuskyEZCreator.js" charset="utf-8"></script>
+</head>
+	
+<style>
+    #my_modal {
+        display: none;
+        width: 600px;
+        padding: 20px 60px;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        border-radius: 3px;
+    }
+
+    #my_modal .modal_close_btn {
+        top: 10px;
+        right: 10px;
+    }
+</style>
+
+<body id="page-top">
+	
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <%-include('../include/brand.ejs')%>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+			<!-- 위즈윅 메뉴 -->
+			
+			 <%-include('../include/siderbar.ejs')%>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+               <%-include('../include/topbar.ejs')%>
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">설비보전현황 수정</h1>
+                
+                    <!-- DataTales Example -->
+               		<div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary"></h6>
+                        </div>							
+          		<section class="">                       
+                  <table class="table formCol2 tb-list">
+					<% for(var i = 0; i<row.length; i++){ %>
+                    <tbody>
+                      <tr>
+                        <th>제목 <i class="fa fa-check"></i></th>
+                        <td>
+                          <input type="text" class="form-control" name="subject" id="subject" value="<%=row[i].subject%>" >
+						  <input type="hidden" class="form-control" name="no" id="no" value="<%=row[i].no%>" >
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <th>내용 <i class="fa fa-check"></i></th>
+                        <td>
+                          <textarea name="ir1" id="ir1" style="display: none; width:100%;"><%=row[i].content%></textarea>
+                        </td>
+                      </tr>
+                    </tbody>
+					<% } %>
+                  </table>
+
+                  <div style = "display: flex; justify-content : center; padding-top : 30px; padding-bottom : 30px;">
+                    <button type="button" id="customer_notice_add" class="btn btn-success">수정</button>&nbsp;&nbsp;									
+                    <button type = "button" class="btn btn-secondary " onclick="board_list()">목록</button>
+                  </div>
+
+              
+            
+
+            <script type="text/javascript">
+              var oEditors = [];
+
+              var sLang = "ko_KR"; // 언어 (ko_KR/ en_US/ ja_JP/ zh_CN/ zh_TW), default = ko_KR
+
+              // 추가 글꼴 목록
+              //var aAdditionalFontSet = [["MS UI Gothic", "MS UI Gothic"], ["Comic Sans MS", "Comic Sans MS"],["TEST","TEST"]];
+
+              nhn.husky.EZCreator.createInIFrame({
+                oAppRef: oEditors,
+                elPlaceHolder: "ir1",
+                sSkinURI: "../lib/smarteditor2-2.8.2.3/SmartEditor2Skin.html",
+                htParams: {
+                  bUseToolbar: true, // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                  bUseVerticalResizer: true, // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                  bUseModeChanger: true, // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                  //bSkipXssFilter : true,		// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+                  //aAdditionalFontList : aAdditionalFontSet,		// 추가 글꼴 목록
+                  fOnBeforeUnload: function() {
+                    //alert("완료!");
+                  },
+                  I18N_LOCALE: sLang
+                }, //boolean
+                fOnAppLoad: function() {
+                  //예제 코드
+                  //oEditors.getById["ir1"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
+                },
+                fCreator: "createSEditor2"
+              });
+
+              // text area 에서 스마트 에디터로 데이터 입력
+              function pasteHTML() {
+                var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입합니다.<\/span>";
+                oEditors.getById["ir1"].exec("PASTE_HTML", [sHTML]);
+              }
+
+              // 스마트 에디터에서 text area 로 데이터 입력
+              function showHTML() {
+                var sHTML = oEditors.getById["ir1"].getIR();
+                alert(sHTML);
+              }
+
+              function submitContents(elClickedObj) {
+                oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []); // 에디터의 내용이 textarea에 적용됩니다.
+
+                // 에디터의 내용에 대한 값 검증은 이곳에서 document.getElementById("ir1").value를 이용해서 처리하면 됩니다.
+
+                try {
+                  // 데이터 입력
+                  console.log(document.getElementById("ir1").value);
+                  elClickedObj.form.submit();
+                } catch (e) {}
+              }
+
+              function setDefaultFont() {
+                var sDefaultFont = '궁서';
+                var nFontSize = 24;
+                oEditors.getById["ir1"].setDefaultFont(sDefaultFont, nFontSize);
+              }
+
+              // 수정해서 쓸 구간
+
+              // HTML 문자 치환 함수
+              function escapeParsr(a) {
+                var b = '';
+
+                b = a.replace(/&lt;/g, '<');
+                b = b.replace(/&gt;/g, '>');
+                b = b.replace(/&nbsp;/g, ' ');
+                b = b.replace(/&amp;/g, '&');
+                b = b.replace(/&quot;/g, '"');
+
+                return b;
+              }
+
+              $("#customer_notice_add").on("click", async function() {
+                oEditors.getById["ir1"].exec("UPDATE_CONTENTS_FIELD", []); // 에디터의 내용이 textarea에 적용됩니다.
+                // post 전달을 통한 데이터 입력 요청
+                let submit_args = commonFunc.makeArgs("board_subject", $("#subject").val());
+				submit_args += commonFunc.makeArgs("board_no", $("#no").val());
+                submit_args += commonFunc.makeArgs("board_content", escapeParsr($("#ir1").val()));
+                const res = await commonFunc.postArgs("/facility_con_update_add", submit_args);
+                if (res == 'ok') {
+                  alert('수정 완료');
+                  window.location = '/facility_con';
+                } else alert('등록 실패');
+              });
+            </script>
+
+          </section>
+						
+						
+                        <!-- <div class="card-body">
+                            <div class="table-responsive">
+								<form action="/order_add_delete" name="list_form" id="list_form" method="post">
+                                <table class="table table-bordered" id="" width="100%" cellspacing="0">
+                                    <thead>
+										
+                                        <tr>										
+											<th>제목</th>	
+											<th>내용</th>	
+											<th>작성자</th>
+                                            <th>등록일</th>                                            																						                                           											
+                                        </tr>
+                                    </thead>
+                         
+                                    <tbody>										
+                                        <tr>											
+											<th><input type="text" id="board_subject"></th>											
+											<th><input type="text" id="board_content"></th>											
+											<th><input type="text" id="board_username"></th>
+                                            <th><input type="date" id="board_date"></th>                                            																						  																					 											
+										</tr>										
+                                    </tbody>
+                                </table>
+								<div style = "display: flex; justify-content : center; padding-top : 50px">
+									<button type = "button" class="btn btn-primary " onclick="board_add()">등록</button>	&nbsp;&nbsp;				
+									<button type = "button" class="btn btn-secondary " onclick="board_list()">목록</button>									
+								</div>
+								 </form>
+							</div>
+                        </div> -->
+						
+						
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+		
+
+	<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+
+
+	
+	<script src="../js/main_contents.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../js/demo/datatables-demo.js"></script>
+	
+</body>
+
+</html>
+
+
+<script>
+	function board_list(){		
+		window.location.href = '/facility_con'
+	}
+	
+	function board_add(){
+		let submit_args = '';		
+		submit_args += commonFunc.makeArgs("board_subject", $("#board_subject").val());
+		submit_args += commonFunc.makeArgs("board_content", $("#board_content").val());
+		submit_args += commonFunc.makeArgs("board_username", $("#board_username").val());		
+		const ret = commonFunc.postArgs("/board_add_add", submit_args);	
+		
+		if(ret == 'ok'){
+					alert('수정이 완료 되었습니다.');
+					location.href='/board';
+				}
+	}
+
+	
+
+</script>

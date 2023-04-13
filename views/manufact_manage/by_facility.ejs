@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <%-include('../include/title.ejs')%>
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+	
+<style>
+    #my_modal {
+        display: none;
+        width: 600px;
+        padding: 20px 60px;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        border-radius: 3px;
+    }
+
+    #my_modal .modal_close_btn {
+        top: 10px;
+        right: 10px;
+    }
+</style>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <%-include('../include/brand.ejs')%>
+            </a>			
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+			<!-- 위즈윅 메뉴 -->
+			
+			<%-include('../include/siderbar.ejs')%>
+			
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+               <%-include('../include/topbar.ejs')%>
+				
+                <!-- End of Topbar -->
+				
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+					
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">공정별</h1>
+                    
+                    <!-- DataTales Example -->
+              		<div class="card shadow mb-4">
+                        <div class="card-header py-3">							
+								<h6 class="m-0 font-weight-bold text-primary">공정별</h6>	<br>							
+								<!-- <button style="float: right; margin-right:25px; padding:20px;" type="button" class="btn btn-sm btn-danger btn-add-ncr" onclick="select_process2()" >조회하기2</button>&nbsp;&nbsp;
+								<%for(var i = 0; i<process.length; i++){ %>											
+									<label for="" style="font-size :24px;"><input name="ch_input" type="checkbox" style="zoom: 1.5;" value="<%=process[i].process%>" id="ch_input"> <%=process[i].process%></label> &nbsp;&nbsp;
+									<input type="checkbox" style="font-size: 50px;" value=""><%=process[i].process%> 
+						   		<%}%>		 -->
+								
+								<%for(var i = 0; i<process.length; i++){ %>		
+									<button id = "process_name_<%=i%>" style="float: left; margin-left:10px;" type="button" class="btn btn-sm btn-primary-off btn-add-ncr" data-ano="" onclick= "setClassName(<%=i%>,'<%=process[i].process%>',<%=process.length%>)"><%=process[i].process%></button>
+								<%}%>		&nbsp;&nbsp;	
+							<button style="float: left; margin-left:10px;" type="button" class="btn btn-sm btn-success btn-add-ncr" onclick="select_process()" >조회하기</button>
+								<input type="hidden" id="out_process" name="out_process" value="<%=out_process%>">
+								<input type="hidden" id="select_process" name="select_process" value="<%=process%>">
+								<form action="/by_facility_select" name="list_form" id="s_form" method="post">									
+									<input type="hidden" id="s_process" name="s_process">																			
+								</form>
+						</div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+								<form action="/order_add_delete" name="list_form" id="list_form" method="post">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+										
+                                        <tr>
+											<th style="width:7%;">No</th>
+                                            <th>수주번호</th>
+                                            <th>품목명</th>
+											<th>생산공정</th>										
+                                        </tr>
+                                    </thead>
+                         
+                                    <tbody>
+										<% for(var i = 0; i<row.length; i++){ %>
+                                        <tr>
+											<td class = "td-center"><%=i+1%></td>
+											<td><%=row[i].order_key%></td>
+											<td><%=row[i].item%></td>
+											<td><%=row[i].process%></td>									
+										</tr>
+										<% } %>
+                                    </tbody>
+                                </table>
+									<div style = "float : right; padding-top : 10px">
+								</div>
+								 </form>
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+		
+
+	<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+		
+	<script src="js/main_contents.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+	
+</body>
+
+</html>
+
+
+<script>
+	var all_no = '';
+	var process_click = '';
+	var company_name = '';
+
+window.onload = function(){
+
+	let submit_args_ = '';
+	let proc = []
+	submit_args_ += commonFunc.makeArgs("index", 1);
+	const process_s = commonFunc.postArgs("/order_document_pro_select", submit_args_);
+
+	for(var i = 0; i<process_s.length; i++){
+		proc[i] = process_s[i].process;
+	}
+	
+	$('#s_process').attr('value','');			
+	let out_process2 = document.getElementById("out_process").value;
+	let select_process = document.getElementById("select_process").value;
+	
+	let out_process3 = out_process2.split(',');
+	//alert("select_process:"+select_process.length);
+	
+	// 제작공정 클래스 변경
+	var pro = '';
+	for(var i = 0; i<out_process3.length; i++){
+		for(var j = 0; j<proc.length; j++){
+			if(out_process3[i] == proc[j]){
+				setClassName(j,out_process3[i])
+			}
+		}
+	}
+}
+	
+
+
+	//공정버튼 클릭 시작
+	function setClassName(index, process,length) {
+		if(document.getElementById('process_name_'+index).classList == 'btn btn-sm btn-primary-off btn-add-ncr'){
+			document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary btn-add-ncr';
+			process_click += (process+",");			
+			$('#s_process').attr('value',process_click);
+					
+		 } else{
+			 document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary-off btn-add-ncr';
+			 var str = process;
+			 process_click = process_click.replace(str, 'NULL')
+		 }
+	}
+	//공정버튼 클릭 끝
+	
+	//조회버튼 클릭 시작
+	function select_process(){
+		let out_process2 = document.getElementById('out_process');
+				
+		var process_select = process_click.slice(0, -1);				
+		let process_select2 =process_select.replaceAll('NULL,','');
+		let process_arr = process_select2.split(',');
+		var process_arr2 = '';
+		
+		let submit_args = '';
+		submit_args += commonFunc.makeArgs("process_select", 1);
+		const ret = commonFunc.postArgs("/by_facility_sort", submit_args);
+		
+		for(let i=0; i<ret.length; i++){			
+			for(let j=0; j<process_arr.length; j++){
+				if(ret[i].process==process_arr[j]){					
+					process_arr2 += (process_arr[j]+',');
+				}
+				
+			}
+		}		
+		var process_arr2 = process_arr2.slice(0, -1);		
+		$('#s_process').attr('value',process_arr2);		
+		
+		// let submit_args2 = '';
+		// submit_args2 += commonFunc.makeArgs("s_process", process_arr2);
+		// const ret2 = commonFunc.postArgs("/by_facility_select", submit_args2);		
+		
+		//location.href='/order_add';
+		document.getElementById('s_form').submit();
+	}
+	//조회버튼 클릭 끝
+
+	function setClassName_off(index, process_details) {
+
+		document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary-off btn-add-ncr';
+		var str = process_details;
+		process = process.replace(str, '')
+	}	
+	
+	//조회버튼 체크박스 클릭 시작
+	// function select_process2(){
+	// 	var checkBoxes = document.getElementsByName("ch_input");		
+	// 	var msg = '';
+		
+	// 	for(var i=0; i < checkBoxes.length; i++){
+	// 		if(checkBoxes[i].checked){
+	// 			process_click += checkBoxes[i].value + "|"
+	// 		}
+	// 	}		
+	// 	var process_select = process_click.slice(0, -1);		
+	// 	$('#s_process').attr('value',process_select);			
+	// 	let submit_args = '';
+	// 	submit_args += commonFunc.makeArgs("process_select", process_select);
+	// 	const ret = commonFunc.postArgs("/by_facility_select", submit_args);
+
+	// 	document.getElementById('s_form').submit();
+	// }
+	//조회버튼 클릭 끝
+	
+// Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+Element.prototype.setStyle = function(styles) {
+    for (var k in styles) this.style[k] = styles[k];
+    return this;
+};
+
+document.getElementById('by_facility').style.background='khaki';
+</script>

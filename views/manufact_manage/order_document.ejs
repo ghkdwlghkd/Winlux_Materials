@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <%-include('../include/title.ejs')%>
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+	
+<style>
+    #my_modal {
+        display: none;
+        width: 600px;work_qty
+        padding: 20px 60px;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        border-radius: 3px;
+    }
+
+    #my_modal .modal_close_btn {
+        top: 10px;
+        right: 10px;
+    }
+</style>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <%-include('../include/brand.ejs')%>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+			<!-- 위즈윅 메뉴 -->
+			
+			 <%-include('../include/siderbar.ejs')%>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+               <%-include('../include/topbar.ejs')%>
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">작업지시서</h1>
+                    
+
+                    <!-- DataTales Example -->
+               <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">작업지시서</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+								<form action="/order_document_delete" name="list_form" id="list_form" method="post">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+											<th style="width:3%;"><input type="checkbox" name="chAll" id="chAll"></th>	
+											<th style="width:7%;">No</th>
+											<th>수주번호</th>
+											<th>담당자</th>
+                                            <th>공정</th>
+                                            <th>작업내용</th>
+											<th>품목명</th>
+											<th>수량</th>
+											<th>발주일</th>
+											<th>납기일</th>
+											<th>상태</th>
+											<th>작업요청</th>
+											<th>요청취소</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+										<% for(var i = 0; i<rows.length; i++){ %>
+                                        <tr>
+											<td><input type="checkbox" class="chList" name="chList" value="<%=rows[i].no%>"></td>
+											<td class = "td-center"><%=i+1%></td>
+											<td class = "td-center"><%=rows[i].order_key%></td>
+											<th class = "td-center"><%=rows[i].work_manager%></th>
+											<td class = "td-center"><%=rows[i].process%></td>
+											<td class = "td-center"><%=rows[i].work_content%></td>
+											<td class = "td-center"><%=rows[i].item%></td>
+											<td class = "td-center"><%=rows[i].qty%></td>
+											<td class = "td-center"><%=rows[i].order_time%></td>
+											<td class = "td-center"><%=rows[i].shipment_time%></td>
+											<% if (rows[i].state== 1 ) { 
+											%><td class = "td-center">대기</td>
+											<td class = "td-center"><button type = "button" class="btn btn-sm btn-success" onclick="example(<%=rows[i].no%>,'<%=rows[i].order_key%>',<%=rows[i].qty%>)">작업요청</button></td>
+											<td class = "td-center"><button type = "button" class="btn btn-sm btn-danger" onclick="example2(<%=rows[i].no%>)" style = "background-color: #D3D3D3;border-color: #D3D3D3;"disabled>요청취소</button></td>
+											<% } %>
+											<% if (rows[i].state== 2 ) { 
+											%><td class = "td-center">작업요청</td>
+											<td class = "td-center"><button type = "button" class="btn btn-sm btn-success" onclick="example(<%=rows[i].no%>)" style = "background-color: #D3D3D3;border-color: #D3D3D3;"disabled>작업요청</button></td>
+											<td class = "td-center"><button type = "button" class="btn btn-sm btn-danger" onclick="example2(<%=rows[i].no%>,<%=rows[i].state%>)">요청취소</button></td>
+											<% } %>  											
+										</tr>
+										<% } %>
+                                    </tbody>
+                                </table>
+									<div style = "float : right; padding-top : 10px">
+								<button type = "button" class="btn btn-primary " data-toggle="modal" data-target="#addModal" >등록</button>&nbsp;&nbsp;
+								<button type="submit" class="btn btn-primary btn-danger" style="float:right;">삭제</button>
+								</div>
+								 </form>
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+		
+
+	<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- 등록 버튼 모달-->
+	    <div class="modal fade" id="addModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>작업지시등록</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered">
+							  <tbody>
+								<tr>
+								  <th style = "width : 20%">수주번호</th>
+						 		  <th style = "width : 30%" colspan = "3">
+									<select id = "company_name_select" onchange="selectNum()" class = "form-control">
+										<option value="" selected disabled>수주번호를 선택해주세요.</option> 
+										 <%for(var i = 0; i< order_num.length; i++)
+	  									{ %>
+											<option value="<%=order_num[i].order_key%>"><%=order_num[i].order_key%></option>
+									   	 <%}%>
+									</select>
+								</tr>
+								  
+								 <tr>
+								   <th class = "width : 25%">담당자</th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "manager" required = "required">
+								  </th>
+								  <th class = "width : 25%">작업완료 요청일</th>
+								  <th style = "width : 25%">
+								  <input type="DATE" class = "form-control" id = "request_time" required = "required" value = "">
+								  </th>
+								</tr>
+								 <tr>
+								  <th class = "">발주일</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "order_time" value ="" disabled>
+								  </th>
+								  <th class = "">납기일</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "shipment_time" value = "" disabled>
+								  </th>
+								</tr>
+								  
+								<tr>
+								  <th class = "">품목명</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "item" disabled>
+								  </th>
+								  <th class = "">수량</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "qty" disabled>
+								  </th>
+								</tr>
+								  
+								<tr>
+									<input type="hidden" class = "form-control"  id = "process">
+								  <th  style = "width : 20%">제작공정</th>
+						 		   <th colspan="3">
+									   <%for(var i = 0; i<process.length; i++){ %>
+											<button id = "process_name_<%=i%>" disabled style="float: left; margin-left:3px;" type="button" class="btn btn-sm btn-primary-off btn-add-ncr" data-ano="" onclick= "setClassName(<%=i%>,'<%=process[i].process%>')"><%=process[i].process%></button>   
+									   <%}%>
+								   </th>
+								</tr>
+								 <tr>
+								  <th class = "width : 25%">수주 내용</th>
+								  <th colspan="3" style = "width : 25%">
+								  <input type="text" class = "form-control" id = "order_content" disabled>
+								  </th>
+								</tr>
+								  <tr>
+								  <th class = "width : 25%">작업 지시 내용</th>
+								  <th colspan="3" style = "width : 25%">
+								  <input type="text" class = "form-control" id = "order_command_content">
+								  </th>
+								</tr>
+							  </tbody>
+							</table>
+							<div class="box-footer text-center">
+							  <button type="button" class="btn btn-sm btn-primary btn-add-ncr" data-ano="" onclick= 'pop_add()'>등록</button>&nbsp;&nbsp;
+							    <button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" data-dismiss="modal">닫기</button>
+							</div>
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div>
+	
+
+	
+		
+	
+	<script src="js/main_contents.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+	
+</body>
+
+</html>
+
+
+<script>
+	var all_no = '';
+	var process = '';
+	var company_name = '';
+	var arr_process = [];
+	function onclick() {
+		$('#order_place').attr('value','');
+		$('#order_time').attr('value','');
+		$('#shipment_time').attr('value','');
+		$('#request_time').attr('value','');
+		$('#process').attr('value','');
+		$('#order_content').attr('value','');
+		$('#item').attr('value','');
+		$('#qty').attr('value','');
+	}
+	
+	function pop_add() {
+		var result = confirm("작업지시서를 등록 하시겠습니까?");
+		if(result){	//등록 시작
+		if($("#request_time").val()!="" && $("#manager").val()!=""  ){
+		let submit_args = '';		 
+			submit_args += commonFunc.makeArgs("order_key", company_name);
+			submit_args += commonFunc.makeArgs("manager", $("#manager").val());
+			submit_args += commonFunc.makeArgs("order_time", $("#order_time").val());
+			submit_args += commonFunc.makeArgs("shipment_time", $("#shipment_time").val());
+			submit_args += commonFunc.makeArgs("request_time", $("#request_time").val());
+			submit_args += commonFunc.makeArgs("process", process);
+			submit_args += commonFunc.makeArgs("order_content", $("#order_content").val());
+			submit_args += commonFunc.makeArgs("item", $("#item").val());
+			submit_args += commonFunc.makeArgs("qty", $("#qty").val());
+			submit_args += commonFunc.makeArgs("order_command_content", $("#order_command_content").val());
+			var ret = commonFunc.postArgs("/order_document_add", submit_args);
+			if(ret == 'y'){
+				alert('등록이 완료 되었습니다.');
+				location.href='/order_document';
+			}else if(ret == 'n'){
+				alert('채우지 않은 칸이 있습니다. 확인 해주세요.');
+			}
+			// else if(ret == 'x'){
+			// 	alert('작업완료 요청일이 납기일을 넘었습니다. 다시 설정해주세요');
+			// }
+			else{
+			}	
+		}else{
+			alert("모든 항목을 입력해주세요.");
+		}
+		}else{			
+		}
+	}
+	
+	// 작업지시서 수정하기
+	// function update(no) {
+	// 	let submit_args = '';
+	// 		submit_args += commonFunc.makeArgs("no", all_no);
+	// 		submit_args += commonFunc.makeArgs("order_place", $("#order_place").val());
+	// 		submit_args += commonFunc.makeArgs("manager", $("#manager").val());
+	// 		submit_args += commonFunc.makeArgs("order_time", $("#order_time").val());
+	// 		submit_args += commonFunc.makeArgs("shipment_time", $("#shipment_time").val());
+	// 		submit_args += commonFunc.makeArgs("requset_time", $("#requset_time").val());
+	// 		submit_args += commonFunc.makeArgs("process", $("#process").val());
+	// 		submit_args += commonFunc.makeArgs("order_content", $("#order_content").val());
+	// 		submit_args += commonFunc.makeArgs("item", $("#item").val());
+	// 		submit_args += commonFunc.makeArgs("qty", $("#qty").val());
+	// 		const ret = commonFunc.postArgs("/order_document_update", submit_args);
+	// 		if(ret == 'y'){
+	// 			alert('등록이 완료 되었습니다.');
+	// 			location.href='/order_document';
+	// 		}	
+	// }	
+	// 작업지시서 수정버튼 >> 해당 row 조회
+	// function update_select(no) {
+	// 	all_no = no;
+	// 	let submit_args = '';
+	// 		submit_args += commonFunc.makeArgs("no", no);
+	// 		const ret = commonFunc.postArgs("/order_document_update_select", submit_args);
+	// 		$('#update_order_place').attr('value',ret[0].order_place);
+	// 		$('#update_manager').attr('value',ret[0].manager);
+	// 		$('#update_order_time').attr('value',ret[0].order_time);
+	// 		$('#update_shipment_time').attr('value',ret[0].shipment_time);
+	// 		$('#update_process').attr('value',ret[0].process);
+	// 		$('#update_order_content').attr('value',ret[0].order_content);
+	// 		$('#update_item').attr('value',ret[0].item);
+	// 		$('#update_qty').attr('value',ret[0].qty);
+	// 		$('#update_request_time').attr('value',ret[0].request_time);
+	// }
+	
+	var check_list = '';
+	  $('#chAll').on('click', function() {
+    if ($(this).prop('checked')) {
+      $('.chList:visible').prop('checked', true);
+    } else {
+      $('.chList:visible').prop('checked', false);
+    }
+  })
+	
+	function selectNum(){
+		
+		let submit_args_ = '';
+		let proc = []
+		submit_args_ += commonFunc.makeArgs("index", selectValue);
+		const process_s = commonFunc.postArgs("/order_document_pro_select", submit_args_);
+		
+		for(var i = 0; i<process_s.length; i++){
+			proc[i] = process_s[i].process;
+		}
+		arr_process = '';
+		var langSelect = document.getElementById("company_name_select");
+		// select element에서 선택된 option의 value가 저장된다.
+		var selectValue = langSelect.options[langSelect.selectedIndex].value;
+		let submit_args = '';
+		submit_args += commonFunc.makeArgs("index", selectValue);
+		const ret = commonFunc.postArgs("/order_document_select_num", submit_args);
+		$('#item').attr('value',ret[0].item);
+		$('#qty').attr('value',ret[0].qty);
+		$('#order_content').attr('value',ret[0].order_content)
+		$('#order_time').attr('value',ret[0].order_time)
+		$('#shipment_time').attr('value',ret[0].shipment_time)
+		company_name = ret[0].order_key;
+		arr_process = ret[0].process.split(',');
+		//전체 off
+		for(var i = 0; i<proc.length; i++){setClassName_off(i,process)}
+		
+		// 제작공정 클래스 변경
+		var pro = '';
+		for(var i = 0; i<arr_process.length; i++){
+			for(var j = 0; j<proc.length; j++){
+				if(arr_process[i] == proc[j]){
+					setClassName(j,arr_process[i])
+				}
+			}
+		}
+	}
+	
+
+	
+function example(no,order_key,qty){
+		var result = confirm("작업요청 하시겠습니까?");
+		if(result){	//등록 시작
+			all_no = no;	
+	
+			let submit_args = '';
+			submit_args += commonFunc.makeArgs("no", no);
+			submit_args += commonFunc.makeArgs("order_key", order_key);
+			submit_args += commonFunc.makeArgs("qty", qty);
+			const ret = commonFunc.postArgs("/order_document_requset", submit_args);
+			location.href='/order_document';
+		}
+}
+	
+function example2(no,state){
+		var result = confirm("작업취소 하시겠습니까?");	
+		if(result){	//등록 시작			
+			if(state==2){
+				all_no = no;
+				let submit_args = '';
+				submit_args += commonFunc.makeArgs("no", no);
+				const ret = commonFunc.postArgs("/order_document_requset_cancel", submit_args);
+				location.href='/order_document';
+			}else{
+				alert("작업시작되어 요청취소 할 수 없습니다. ");
+			}
+				
+		}
+}	
+
+// Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+Element.prototype.setStyle = function(styles) {
+    for (var k in styles) this.style[k] = styles[k];
+    return this;
+};
+
+// 클래스 이름 설정/변경
+function setClassName(index, process_details) {
+	if(document.getElementById('process_name_'+index).classList == 'btn btn-sm btn-primary-off btn-add-ncr'){
+	  	document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary btn-add-ncr';
+		process += process_details
+		console.log('1')
+	 } else{
+		 document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary-off btn-add-ncr';
+		 var str = process_details;
+		 process = process.replace(str, '')
+		 console.log('2')
+	 }
+}
+	
+function setClassName_off(index, process_details) {
+	document.getElementById('process_name_'+index).className = 'btn btn-sm btn-primary-off btn-add-ncr';
+	var str = process_details;
+	process = process.replace(str, '')
+}
+	
+document.getElementById('order_document').style.background='khaki';
+</script>

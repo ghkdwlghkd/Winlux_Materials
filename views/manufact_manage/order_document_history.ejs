@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <%-include('../include/title.ejs')%>
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+	
+<style>
+    #my_modal {
+        display: none;
+        width: 600px;
+        padding: 20px 60px;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        border-radius: 3px;
+    }
+
+    #my_modal .modal_close_btn {
+        top: 10px;
+        right: 10px;
+    }
+</style>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <%-include('../include/brand.ejs')%>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+			<!-- 위즈윅 메뉴 -->
+			
+			 <%-include('../include/siderbar.ejs')%>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+               <%-include('../include/topbar.ejs')%>
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+					<h1 class="h3 mb-2 text-gray-800">생산현황</h1>
+                   
+                    <!-- DataTales Example -->
+               <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">생산현황</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>										
+                                        <tr>
+                                            <th>no</th>
+                                            <th>수주번호</th>											
+                                            <th>작업요청일자</th>
+                                            <th>품목명</th>
+                                            <th>작업요청 수량</th>
+											<th>작업완료 수량</th>
+											<th>작업시작일자</th>
+											<th>작업완료일자</th>											
+                                        </tr>
+                                    </thead>
+                         
+                                    <tbody>
+										<% for(var i = 0; i<row.length; i++){ %>
+                                        <tr>
+											<td class = "td-center"><%=i+1%></td> 											
+											<td class = "td-center"><%=row[i].order_key%></td>										
+											<td class = "td-center"><%=row[i].request_time%></td>
+											<td class = "td-center"><%=row[i].item%></td>
+											<td class = "td-center"><%=row[i].qty%></td>
+											<td class = "td-center"><%=row[i].work_qty%></td>											
+											<td class = "td-center"><%=row[i].start_time%></td>
+											<td class = "td-center"><%=row[i].end_time%></td>
+											<!-- <td class = "td-center"><button type = "button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#detailModal" onclick="Fn_detailModal('<%=row[i].order_key%>')">작업 상세보기</button></td> -->
+										</tr>
+										<% } %>	
+                                       
+                                    </tbody>
+                                </table>
+								<div style = "float : right; padding-top : 10px">
+								
+								</div>
+                            
+							</div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+		
+
+	<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+		<!-- 작업상세보기 버튼 모달 시작-->
+	    <!-- <div class="modal fade" id="detailModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg2" role="document" style="width:1300px; ">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>생산현황 상세보기</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box"> 				 
+
+							<table class="table tb-list table-bordered">							    
+								<tr >
+								  <th class = "width : 15%">수주번호</th>
+								  <th class = "width : 15%">작업번호</th>
+								  <th class = "width : 40%">품목명</th>
+								  <th class = "width : 20%">요청내용</th>
+								  <th class = "width : 10%">요청수량</th>
+								  <th class = "width : 10%">작업수량</th>								  
+								  <th class = "width : 10%">작업 시작일자</th>
+								  <th class = "width : 10%">작업 완료일자</th>
+								</tr>	
+								<tbody id="myTable">
+													
+							    </tbody>
+							</table>
+
+							<div class="box-footer text-center">							  
+							  <button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" onclick="Fn_detailClose()" data-dismiss="modal">닫기</button>								
+							</div>
+						</div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div> -->
+	<!-- 작업상세보기 버튼 모달 끝-->
+
+
+	
+	
+	
+	
+	
+	<script src="js/main_contents.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+	<!-- <script src="js/scripts.js"></script> -->
+</body>
+
+</html>
+
+
+<script>
+	
+	// var count = 0;
+	// var column_name = [];
+	// $("#column_add").on("click", function() {
+	// 	if(count > 8){
+	// 		alert('list 갯수는 최대 10개를 초과할 수 없습니다.');
+	// 	} else {
+	// 		count ++;
+	// 		$( ".column_list" ).append( `
+	// 			<input type="text" class="form-control valid" name="column_name_${count}" id="column_name_${count}" values = "">
+	// 		`);
+	// 	}
+	// });
+	
+	// $("#column_del").on("click", function() {
+	// 	$("#column_list").remove();
+	// });
+	
+	// $('#column_last_add').click(function(){
+	// 	count++;
+	// 	for(var i=0; i<count; i++){
+	// 		column_name[i] = $(`#column_name_${i}`).val();
+	// 	}
+	// 	 let submit_args = '';
+	// 	submit_args += commonFunc.makeArgs("grid_name", $("#grid_name").val());
+	// 	submit_args += commonFunc.makeArgs("column_name", column_name);
+	// 	const ret = commonFunc.postArgs("/column_last_add", submit_args);
+		
+	// 	alert('메뉴 생성이 완료 되었습니다.');
+	// 	location.href='/';
+	// });
+	
+
+	
+	// 작업 상세보기 버튼 클릭 시 데이터 조회
+	// function Fn_detailModal(order_key) {	
+	// 	$("#myTable").html('');
+	// 	let submit_args = '';
+	// 	submit_args += commonFunc.makeArgs("order_key", order_key);
+				
+	// 	const ret = commonFunc.postArgs("/order_document_history_Fn_detailModal", submit_args);
+		
+	// 	var innerHtml = "";		
+	// 	for(var i = 0; i<ret.length; i++){								
+	// 		innerHtml += '<tr>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].order_key+'</td>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].work_key+'</td>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].item+'</td>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].order_content+'</td>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].order_qty+'</td>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].qty+'</td>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].start_time+'</td>';
+	// 		innerHtml += '<td class = "width : 15%">'+ret[i].end_time+'</td>';
+	// 		innerHtml += '</tr>';			
+	// 	}
+	// 	$('#myTable').append(innerHtml);
+	// }	
+
+document.getElementById('order_document_history').style.background='khaki';
+</script>

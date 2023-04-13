@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <%-include('../include/title.ejs')%>
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<!--J 쿼리 사용 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+	
+<style>
+    #my_modal {
+        display: none;
+        width: 600px;
+        padding: 20px 60px;
+        background-color: #fefefe;
+        border: 1px solid #888;
+        border-radius: 3px;
+    }
+	
+    #my_modal .modal_close_btn {
+        top: 10px;
+        right: 10px;
+    }
+</style>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <%-include('../include/brand.ejs')%>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+			<!-- 위즈윅 메뉴 -->
+			
+			 <%-include('../include/siderbar.ejs')%>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper 불량검사 시작 -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+               <%-include('../include/topbar.ejs')%>
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">품질검사</h1>
+                    <!-- DataTales Example -->
+               		<div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">품질검사</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+										
+                                        <tr>
+                                            <th>No</th>
+                                            <th>수주번호</th>                                                                                        
+                                            <th>품목명</th>
+                                            <th>요청수량</th>
+											<th>잔량</th>											
+											<th>검사시작</th>
+                                        </tr>
+                                    </thead>
+                         			
+                                    <tbody>
+										<% for(var i = 0; i<rows.length; i++){ 	%>		
+											<%if(rows[i].remain_qty != 0) { %>				
+											  <tr>
+												<td class = "td-center"><%=i+1%></td>
+												<td class = "td-center"><%=rows[i].order_key%></td>                                                                         
+												<td class = "td-center"><%=rows[i].item%></td>
+												<td class = "td-center"><%=rows[i].qty%></td>																	
+												<td class = "td-center"><%=rows[i].remain_qty%></td>
+												<% if((rows[i].remain_qty)>0){ %>		
+													<td class = "td-center"><button type = "button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#checkstopModal" onclick="Fn_check_run('<%=rows[i].order_key%>',<%=rows[i].remain_qty%>,<%=rows[i].o_qty%>)">검사시작</button></td>
+												<%} else{%>
+													<td class = "td-center"><button type = "button" class="btn btn-sm btn-success" style = "background-color: #D3D3D3;border-color: #D3D3D3;" disabled>검사완료</button></td>
+												 <% }%>
+											  </tr>
+											<% } %>
+										<% } %>
+                                    </tbody>
+                                </table>
+							</div>
+                        </div>
+                    </div>
+
+					 <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">불량조치</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                                    <thead>										
+                                        <tr>
+                                            <th>No</th>
+                                            <th>수주번호</th>                                                                                        
+                                            <th>품목명</th>
+                                            <th>불량수량</th>											
+											<th>검사시작</th>
+                                        </tr>
+                                    </thead>                         			
+                                    <tbody>
+										<% for(var i = 0; i<row2.length; i++){ %>
+										  <tr>											
+											<td class = "td-center"><%=i+1%></td>
+                                            <td class = "td-center"><%=row2[i].order_key%></td>      											  
+                                            <td class = "td-center"><%=row2[i].item%></td>
+                                            <td class = "td-center"><%=row2[i].remain_qty%></td>													
+											<% if (row2[i].remain_qty!= 0){ %>																					
+											  <td class = "td-center"><button type = "button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#checkstopModal2" onclick="Fn_def_run('<%=row2[i].order_key%>','<%=row2[i].item%>',<%=row2[i].remain_qty%>,'<%=row2[i].work_key%>',<%=row2[i].order_qty%>,<%=row2[i].o_qty%>,<%=row2[i].r_qty%>)">불량조치 시작</button></td>
+											<% }else{%>																							  
+											  <td class = "td-center"><button type = "button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#checkstopModal2" disabled>불량조치 시작</button></td>
+											  <% }%>												
+											  
+										  </tr>
+										<% } %>
+                                    </tbody>
+                                </table>
+							</div>
+                        </div>
+					</div>
+						 
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content 불량검사 끝 -->
+
+			
+			
+
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+		
+
+	<!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	
+	
+		<!-- stop 버튼 모달 시작-->
+	<!--
+	    <div class="modal fade" id="checkstopModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>표준 공정 수정</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered">
+							    <tbody>
+								<tr>
+								  <th style = "width : 20%">수주번호</th>
+						 		  <th style = "width : 30%">
+								  <input type="text" class = "form-control" id = "stop_order_key" disabled>
+								  </th>
+								</tr>
+								<tr>
+								  <th class = "width : 25%">품목명</th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "stop_item" disabled>
+								  </th>
+								</tr>
+								 <tr>								  
+								  <th class = "">요청 내용</th>
+								  <th>
+								  <input type="text" class = "form-control" id = "stop_order_content" disabled>
+								  </th>	
+								</tr>
+								<tr>
+								  <th class = "">검사 요청수량 </th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "stop_order_qty" disabled>
+								  </th>
+								</tr>
+								<tr>
+								  <th class = "">잔량 </th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "stop_remain_qty" disabled>
+								  </th>
+								</tr>	
+									
+								<tr>
+								  <th class = "">총 검사수량 입력</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "stop_input_qty">
+								  <input type="hidden" class = "form-control"  id = "stop_no">
+								  <input type="hidden" class = "form-control"  id = "stop_qty">
+								  <input type="hidden" class = "form-control"  id = "stop_request_time">									  
+								  <input type="hidden" class = "form-control"  id = "stop_check_key">		
+								  <input type="hidden" class = "form-control"  id = "stop_check_qty">		
+									  
+								  </th>
+								</tr>	
+								<tr>
+								  <th class = "">불량내용 입력 </th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "stop_defective_content">
+								  </th>
+								</tr>																				
+							  </tbody>
+							</table>
+
+							<div class="box-footer text-center">
+							  <button type="button" class="btn btn-sm btn-primary btn-add-ncr" data-ano="" onclick= 'Fn_check_stop()'>저장하기</button>
+							  <button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" data-dismiss="modal">닫기</button>								
+							</div>
+						</div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div>
+	-->
+	<!-- stop 버튼 모달 끝-->	
+	<!-- 신규 검사 등록 버튼 모달-->
+	   <div class="modal fade" id="checkstopModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>품질검사 등록</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+							<table class="table tb-list table-bordered" id = "defective_process">
+							  <tbody id="table_body">
+								<tr>
+								  <th style = "width : 20px">수주번호</th>
+						 		  <th style = "width : 33px" colspan="4">
+									<input type="text" class = "form-control" id = "select_order_key" disabled >
+								  </th> 
+								  <!-- <th class = "width : 25%"></th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "update_work_key" disabled>
+								  </th> -->
+								</tr>
+								  
+								 <tr>
+									 <th class = "">잔량</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "select_remain_qty" disabled >
+								  <input type="hidden" class = "form-control"  id = "select_o_qty" disabled>
+								  </th>
+									 <th class = "">요청수량</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "select_qty" disabled>
+								  </th>
+								</tr>
+								  <tr>
+								  <th class = "" style = "width : 20px">품목명</th>
+								  <th style = "width : 33px" colspan="4">
+								  <input type="text" class = "form-control"  id = "select_item" disabled>							
+								  <!-- <input type="text" class = "form-control"  id = "select_his_sumqty" disabled>							 -->
+								  <input type="hidden" class = "form-control"  id = "select_no">							
+								  </th>
+								 
+								</tr>								  								  
+								  <tr>
+								  <th class = "" style = "width : 20px">검사수량 입력</th>
+								  <th style = "width : 33px" colspan="4">
+								  <input type="text" class = "form-control"  id = "update_qty" 
+									oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"	 
+									>			
+								  </th>								 
+								</tr>
+								  
+								<tr>
+								  <th  style = "width : 20%">불량유무</th>
+						 		   <th colspan="3">									
+									<button id = "button_def" style="float: left; margin-left:3px;" type="button" class="btn btn-sm btn-primary-off btn-add-ncr" data-ano="" value = "6" >불량</button> 
+									<button id = "button_ok" style="float: left; margin-left:3px;" type="button" class="btn btn-sm btn-primary-off btn-add-ncr" data-ano="" value = "8">양품</button>
+								   </th>
+								</tr>
+								<tr id = "tr_id">
+									
+								</tr>								
+								
+							  </tbody>
+							</table>
+
+							<div class="box-footer text-center">
+							  <button type="button" class="btn btn-sm btn-primary btn-add-ncr" data-ano="" onclick= 'insert_qty()'>품질검사 등록</button>
+							  <button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" data-dismiss="modal">닫기</button>
+							</div>
+
+
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div>
+	
+
+	<!-- 불량검사시작 모달 시작-->
+	   <div class="modal fade" id="checkstopModal2" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>불량조치 등록</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered" id = "defective_process">
+							  <tbody id="table_body">
+								<tr>
+								  <th style = "width : 10px">수주번호</th>
+						 		  <th style = "width : 66%" colspan="4">
+									<input type="text" class = "form-control" id = "select_order_key2" disabled >
+								  </th> 
+								  <!-- <th class = "width : 25%"></th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "update_work_key" disabled>
+								  </th> -->
+								</tr>				  
+								
+								  <tr>
+								  <th class = "" style = "width : 20px">품목명</th>
+								  <th style = "width : 33px" colspan="4">
+								    <input type="text" class = "form-control"  id = "select_item2" disabled>																
+								  </th>							 
+								</tr>								  								  
+								  <tr>
+								  <th class = "" style = "width : 20px">불량수량</th>
+								  <th style = "width : 33px" colspan="4">
+								  <input type="text" class = "form-control"  id = "update_qty2" disabled>	
+								  </th>								 
+								</tr>
+																  								  
+								  <tr>
+								  <th class = "" style = "width : 20px">불량조치 수량</th>
+								  <th style = "width : 33px" colspan="4">
+								  <input type="text" class = "form-control"  id = "update_qty3"
+									oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"	 
+									>	
+								  <input type="hidden" class = "form-control"  id = "update_sumqty" disabled>	
+								  <input type="hidden" class = "form-control"  id = "update_work_key" disabled>	
+								  <input type="hidden" class = "form-control"  id = "update_order_qty" disabled>									  
+								  <input type="hidden" class = "form-control"  id = "update_o_qty" disabled>	
+								  <input type="hidden" class = "form-control"  id = "update_r_qty" disabled>		  								  
+								  </th>								 
+
+								</tr>								  								  
+								  <tr>
+								  <th class = "" style = "width : 20px">불량조치 내용</th>
+								  <th style = "width : 33px" colspan="4">
+								  <input type="text" class = "form-control"  id = "input_defective_content2">	
+								  </th>								 
+								</tr>
+									  
+							  </tbody>
+							</table>
+
+							<div class="box-footer text-center">
+							  <button type="button" class="btn btn-sm btn-primary btn-add-ncr" data-ano="" onclick= 'def_qty()'>불량조치 등록</button>
+							  <button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" data-dismiss="modal">닫기</button>
+							</div>
+
+
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>
+   		</div>
+		<!-- 불량검사시작 모달 끝-->
+		
+		<!-- 불량 조치 등록 버튼 모달-->
+	   <!-- <div class="modal fade" id="modifyModal" data-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="model_view_10">
+
+				  <div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-pencil-square-o"></i>불량 검사 결과 등록</h4>
+				  </div>
+
+				  <div class="modal-body">
+					<div class="box-body">
+
+					  <div class="">
+						<div class="col-xs-12">
+						  <div class="box">
+
+							<input type="hidden" name="ano" id="ano" value="778">
+							<input type="hidden" name="company" id="company" value="part1_업체">
+					 
+
+							<table class="table tb-list table-bordered" id = "defective_process">
+							  <tbody>
+								<tr>
+								  <th style = "width : 20%">수주번호</th>
+						 		  <th style = "width : 30%">
+									<input type="text" class = "form-control" id = "modify_order_key" disabled value = "">
+								  </th>
+								  <th class = "width : 25%">작업번호</th>
+								  <th style = "width : 25%">
+								  <input type="text" class = "form-control" id = "modify_work_key" disabled>
+								  </th>
+								</tr>
+								  
+								 <tr>
+									 <th class = "">작업 수량</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "modify_qty" disabled >
+								  </th>
+									 <th class = "">요청 수량</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "modify_order_qty" disabled>
+								  </th>
+								</tr>
+								  
+								  <tr>
+								  <th class = "">검사수량</th>
+								  <th>
+								  <input type="text" class = "form-control"  id = "" >
+								  </th>
+								 
+								</tr>
+								<tr>
+									<input type="hidden" class = "form-control"  id = "process">
+								    <th style = "width : 20%">불량 조치</th>
+						 		    <th colspan="3">
+									<button id = "button_6" style="float: left; margin-left:3px;" type="button" class="btn btn-sm btn-primary btn-add-ncr" data-ano="" value = "7">불량 조치</button> 
+								   </th>
+								</tr>
+								 <tr id = "defective_list_addition">
+								  	<th class = "width : 25%">불량 내용</th>
+								  	<th colspan="3" style = "width : 25%">
+								  	<input type="text" class = "form-control" id = "modify_defective_content" disabled>
+								 	</th>
+								</tr>  
+								<tr id = "defective_list_addition">
+								  	<th class = "width : 25%">불량 조치 내용</th>
+								  	<th colspan="3" style = "width : 25%">
+								  	<input type="text" class = "form-control" id = "modify_defective_measure">
+								 	</th>
+								</tr>  
+								
+							
+							  </tbody>
+							</table>
+
+							<div class="box-footer text-center">
+							  <button type="button" class="btn btn-sm btn-primary btn-add-ncr" data-ano="" onclick= 'modify()'>수정하기</button>
+							  <button class="btn btn-sm btn-default btn-danger modal_close_btn" type="button" data-dismiss="modal">닫기</button>
+								
+							</div>
+
+
+						  </div>
+						</div>
+					  </div>
+
+					</div>
+
+				  </div>
+
+				</div>
+            </div>
+        </div>-->
+   		</div> 
+
+	
+	<script src="js/main_contents.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+	<!-- <script src="js/scripts.js"></script> -->
+</body>
+
+</html>
+
+
+<script>
+	var all_no = '';
+	var process = '';
+	var company_name = '';
+	var arr_process = [];
+	var order_key = '';
+	
+	// 검사시작 버튼 클릭 시
+	function Fn_check_run(order_key,remain_qty,o_qty) {			
+		let submit_args = '';
+		let check_qty = -99;
+		submit_args += commonFunc.makeArgs("order_key", order_key);		
+		const ret = commonFunc.postArgs("/check_select_button", submit_args);
+		if(ret.row[0].check_qty==null){
+			check_qty = 0;
+		}else{
+			check_qty = ret.row[0].check_qty;
+		}
+		let select_remain_qty = parseInt(ret.row[0].qty) - check_qty;		
+
+		$('#select_order_key').attr('value',ret.row[0].order_key);
+		$('#select_o_qty').attr('value',o_qty);
+		$('#select_remain_qty').attr('value',remain_qty);
+		$('#select_qty').attr('value',ret.row[0].qty);
+		$('#select_item').attr('value',ret.row[0].item);			
+		//$('#select_no').attr('value',ret.row2[0].no);	
+		$('#select_his_sumqty').attr('value',ret.row3[0].his_sumqty);	
+			
+	}	
+	// 불량조치시작 버튼 클릭 시
+	function Fn_def_run(order_key,item,remain_qty,work_key,order_qty,o_qty,r_qty) {			
+			$('#select_order_key2').attr('value',order_key);
+			$('#select_item2').attr('value',item);			
+			$('#update_qty2').attr('value',remain_qty);	
+			$('#update_order_qty').attr('value',order_qty);	
+			$('#update_o_qty').attr('value',o_qty);	
+			$('#update_r_qty').attr('value',r_qty);	
+			$('#update_work_key').attr('value',work_key);				
+		
+			let submit_args = '';
+			submit_args += commonFunc.makeArgs("order_key", order_key);			
+			const ret = commonFunc.postArgs("/Fn_def_run_button", submit_args);
+			$('#update_sumqty').attr('value',ret[0].sumqty);
+	}	
+	
+	// 검사결과 등록하기 시작
+	function insert_qty() {
+		var result = confirm("검사를 등록 하시겠습니까?");
+		let order_key = $('#select_order_key').val();
+		let remain_qty = parseInt($('#select_remain_qty').val());		
+		let select_qty = parseInt($('#select_qty').val());		
+		let item = $('#select_item').val();		
+		let o_qty = parseInt($('#select_o_qty').val());		
+		let update_qty = parseInt($('#update_qty').val()); // 품질검사 잔량
+		let select_no = $('#select_no').val();
+		let select_his_sumqty = parseInt($('#select_his_sumqty').val());		
+		let input_defective_content = $('#input_defective_content').val();
+		select_no = "QU"+(parseInt(select_no)+1);
+				
+		if(Number.isNaN(o_qty)){
+			o_qty=0;		
+		}
+		
+		if($("#select_no").val()==""){
+			select_no = "QU1";			
+		}				
+		
+		if(result){	//검사 시작
+		if($("#update_qty").val()!=""){
+			if(remain_qty >= update_qty && update_qty > 0){
+					if(toggle_key==2){	// toggle_key==2 이면 양품									
+						if(parseInt(select_qty) > parseInt(update_qty + o_qty)){							
+							let submit_args = '';
+							submit_args += commonFunc.makeArgs("order_key", order_key);
+							submit_args += commonFunc.makeArgs("update_qty", update_qty);
+							submit_args += commonFunc.makeArgs("select_qty", select_qty);				
+							submit_args += commonFunc.makeArgs("item", item);	
+							submit_args += commonFunc.makeArgs("work_key", select_no);	
+							submit_args += commonFunc.makeArgs("input_defective_content", input_defective_content);	
+							submit_args += commonFunc.makeArgs("state", "4");
+							submit_args += commonFunc.makeArgs("state_his", "o");
+							const ret = commonFunc.postArgs("/defective_list_update", submit_args);
+							if(ret == 'y'){
+								alert('검사 결과가 등록 되었습니다.');
+								location.href='/defective_list';
+							}
+						}else if (parseInt(select_qty) == parseInt(update_qty + o_qty)){													
+							let submit_args = '';							
+							submit_args += commonFunc.makeArgs("order_key", order_key);
+							submit_args += commonFunc.makeArgs("update_qty", update_qty);
+							submit_args += commonFunc.makeArgs("select_qty", select_qty);
+							submit_args += commonFunc.makeArgs("item", item);	
+							submit_args += commonFunc.makeArgs("work_key", select_no);	
+							submit_args += commonFunc.makeArgs("input_defective_content", input_defective_content);	
+							submit_args += commonFunc.makeArgs("state", "5");
+							submit_args += commonFunc.makeArgs("state_his", "o");
+							const ret = commonFunc.postArgs("/defective_list_update", submit_args);
+							if(ret == 'y'){
+								alert('검사 결과가 등록 되었습니다.');
+								location.href='/defective_list';
+							}else{
+								alert('에러');
+							}
+					}		
+				}else if(toggle_key==1){ // toggle_key==1 이면 불량					
+					if(remain_qty > update_qty){					
+						let submit_args = '';					
+						submit_args += commonFunc.makeArgs("order_key", order_key);
+						submit_args += commonFunc.makeArgs("update_qty", update_qty);
+						submit_args += commonFunc.makeArgs("select_qty", select_qty);				
+						submit_args += commonFunc.makeArgs("item", item);	
+						submit_args += commonFunc.makeArgs("work_key", select_no);	
+						submit_args += commonFunc.makeArgs("input_defective_content", input_defective_content);	
+						submit_args += commonFunc.makeArgs("state", "4");
+						submit_args += commonFunc.makeArgs("state_his", "x");			
+						const ret = commonFunc.postArgs("/defective_list_update", submit_args);
+						if(ret == 'y'){
+							alert('검사 결과가 등록 되었습니다.');
+							location.href='/defective_list';
+						}	
+					}else {	
+						let submit_args = '';							
+						submit_args += commonFunc.makeArgs("order_key", order_key);
+						submit_args += commonFunc.makeArgs("update_qty", update_qty);
+						submit_args += commonFunc.makeArgs("select_qty", select_qty);				
+						submit_args += commonFunc.makeArgs("item", item);	
+						submit_args += commonFunc.makeArgs("work_key", select_no);	
+						submit_args += commonFunc.makeArgs("input_defective_content", input_defective_content);	
+						submit_args += commonFunc.makeArgs("state", "4");
+						submit_args += commonFunc.makeArgs("state_his", "x");
+						const ret = commonFunc.postArgs("/defective_list_update", submit_args);
+						if(ret == 'y'){
+							alert('검사 결과가 등록 되었습니다.');
+							location.href='/defective_list';
+						}					
+					}			
+
+				}else{
+					alert("불량유무를 선택해주세요");
+				}
+			}else{
+					alert("검사수량을 확인해 주세요.")
+			}
+		}else{
+			alert("검사 수량을 입력해주세요");
+		}	
+		} //검사 끝
+	}
+	
+	
+	// 불량조치등록하기 시작
+	function def_qty() {			
+		var result = confirm("검사를 등록 하시겠습니까?");
+		let order_key = $('#select_order_key2').val();	
+		let select_item2 = $('#select_item2').val();	
+		let commnet = $('#input_defective_content2').val();	
+		let sumqty = parseInt($('#update_sumqty').val());						
+		let update_qty = parseInt($('#update_qty3').val());		
+		let update_qty2 = parseInt($('#update_qty2').val());		
+		let order_qty = parseInt($('#update_order_qty').val());	
+		let o_qty = parseInt($('#update_o_qty').val());	
+		let r_qty = parseInt($('#update_r_qty').val());	
+
+		let submit_args = '';							
+		submit_args += commonFunc.makeArgs("order_key", order_key);	
+		const ret = commonFunc.postArgs("/defective_search_no", submit_args);				
+		let work_key = "QU" + (parseInt(ret[0].no) + 1);
+		
+		if(result){	//검사 시작			
+			if(order_qty > o_qty + r_qty + update_qty && update_qty >=0 && update_qty2 >= update_qty ){				
+				let submit_args = '';							
+				submit_args += commonFunc.makeArgs("order_key", order_key);	
+				submit_args += commonFunc.makeArgs("work_key", work_key);				
+				submit_args += commonFunc.makeArgs("update_qty", update_qty);
+				submit_args += commonFunc.makeArgs("commnet", commnet);
+				submit_args += commonFunc.makeArgs("item", select_item2);
+				submit_args += commonFunc.makeArgs("state", 4);
+				submit_args += commonFunc.makeArgs("state_his", 'r');
+
+				const ret = commonFunc.postArgs("/defective_list2_update", submit_args);
+				if(ret == 'y'){
+					alert('검사 결과가 등록 되었습니다.');
+					location.href='/defective_list';
+				}
+			}else if(order_qty == (o_qty + r_qty + update_qty)&&update_qty >=0 && update_qty2 >= update_qty ){
+				//alert("2222222");
+				let submit_args = '';							
+				submit_args += commonFunc.makeArgs("order_key", order_key);	
+				submit_args += commonFunc.makeArgs("work_key", work_key);				
+				submit_args += commonFunc.makeArgs("update_qty", update_qty);
+				submit_args += commonFunc.makeArgs("item", select_item2);
+				submit_args += commonFunc.makeArgs("commnet", commnet);
+				submit_args += commonFunc.makeArgs("state", 5);
+				submit_args += commonFunc.makeArgs("state_his", 'r');
+
+				const ret = commonFunc.postArgs("/defective_list2_update", submit_args);
+				if(ret == 'y'){
+					alert('검사 결과가 등록 되었습니다.');
+					location.href='/defective_list';
+				}
+			}else{
+				alert("불량조치 수량을 확인해 주세요")
+			}
+							
+		}else{
+			
+		}//검사 끝
+		
+	}
+	// 불량조치등록하기 끝
+	
+	
+	// 검사결과 등록하기 끝
+	
+	// 불량 버튼 클릭 시 > 불량내용 활성화 시작
+	// function add_tr() {//행 추가			
+	// 	var innerHtml = "";									
+	// 		console.log("1111111111:");
+	// 		innerHtml += '<tr>';
+	// 		innerHtml += '<th class = "" style="width : 20px">'+"불량내용 입력"+'</th>';
+	// 		innerHtml += '<th style="width : 33px" colspan="4"><input type="text" class = "form-control"  id = "select_item"></th>';			
+	// 		innerHtml += '</tr>';
+		
+	// 	$('#table_body').append(innerHtml);	
+	// }	
+
+	// 불량 버튼 클릭 시 > 불량내용 활성화 끝
+	
+	// // 작업종료 버튼 클릭 시 데이터 조회
+	// function check_stop_select(no,order_key) {
+	// 	all_no = no;
+	// 	let submit_args = '';
+	// 		submit_args += commonFunc.makeArgs("no", no);
+	// 		submit_args += commonFunc.makeArgs("order_key", order_key);
+	// 		const ret = commonFunc.postArgs("/check_status_stop_select", submit_args);
+		
+	// 	// console.log(ret.row2[0].work_key)
+	// 	// console.log(ret.row1[0].order_key)
+		
+	// 		$('#stop_order_key').attr('value',ret.row1[0].order_key);
+	// 		$('#stop_item').attr('value',ret.row1[0].item);
+	// 		$('#stop_order_content').attr('value',ret.row1[0].order_content);	
+	// 		$('#stop_order_qty').attr('value',ret.row1[0].order_qty);
+	// 		$('#stop_no').attr('value',ret.row1[0].no);
+	// 		$('#stop_qty').attr('value',ret.row1[0].qty);		
+	// 		$('#stop_check_qty').attr('value',ret.row1[0].check_qty);		
+	// 		$('#stop_remain_qty').attr('value',ret.row1[0].qty-ret.row1[0].check_qty);			
+	// 		$('#stop_request_time').attr('value',ret.row1[0].request_time);		
+	// 		$('#stop_check_key').attr('value',ret.row2[0].check_key);	
+			
+	// }
+	
+	// 작업종료 모달 > 저장 클릭 시
+	// function Fn_check_stop() {			
+	// 	let no = document.getElementById("stop_no").value;
+	// 	let order_key = document.getElementById("stop_order_key").value;
+	// 	let input_qty = document.getElementById("stop_input_qty").value;
+	// 	// let stop_qty = document.getElementById("stop_qty").value;
+	// 	let order_qty = document.getElementById("stop_order_qty").value;
+	// 	let check_key = document.getElementById("stop_check_key").value;
+	// 	let request_time = document.getElementById("stop_request_time").value;
+	// 	let item = document.getElementById("stop_item").value;		
+	// 	let defective_content = document.getElementById("stop_defective_content").value;		
+	// 	let before_check_qty = document.getElementById("stop_check_qty").value;		
+		
+	// 	let check_qty = parseInt(before_check_qty) + parseInt(input_qty);
+	// 	console.log("no" +no );
+	// 	console.log("input_qty" + input_qty);		
+	// 	console.log("check_key" + check_key);
+	// 	console.log("request_time" + request_time);
+	// 	console.log("check_qty:" + check_qty);
+	
+		
+	// 	let state_qty = -1;
+				
+	// 	if(order_qty>check_qty){						
+	// 		state_qty = 7;			
+	// 		let submit_args = '';	
+			
+	// 		submit_args += commonFunc.makeArgs("button", "stop");
+	// 		submit_args += commonFunc.makeArgs("no", no);			
+	// 		submit_args += commonFunc.makeArgs("order_key", order_key);		
+	// 		submit_args += commonFunc.makeArgs("input_qty", input_qty);					
+	// 		submit_args += commonFunc.makeArgs("state_qty", state_qty);
+	// 		submit_args += commonFunc.makeArgs("check_qty", check_qty);
+	// 		submit_args += commonFunc.makeArgs("request_time", request_time);
+	// 		submit_args += commonFunc.makeArgs("check_key", check_key);
+	// 		submit_args += commonFunc.makeArgs("item", item);
+	// 		submit_args += commonFunc.makeArgs("defective_content", defective_content);
+			
+	// 		const ret = commonFunc.postArgs("/check_status_button", submit_args);		
+
+	// 		location.href='/defective_list';
+	// 	}else{			
+	// 		state_qty = 8;			
+	// 		let submit_args = '';	
+			
+	// 		submit_args += commonFunc.makeArgs("button", "stop");
+	// 		submit_args += commonFunc.makeArgs("no", no);			
+	// 		submit_args += commonFunc.makeArgs("order_key", order_key);		
+	// 		submit_args += commonFunc.makeArgs("input_qty", input_qty);			
+	// 		submit_args += commonFunc.makeArgs("state_qty", state_qty);
+	// 		submit_args += commonFunc.makeArgs("check_qty", check_qty);
+	// 		submit_args += commonFunc.makeArgs("request_time", request_time);
+	// 		submit_args += commonFunc.makeArgs("check_key", check_key);
+	// 		submit_args += commonFunc.makeArgs("item", item);
+	// 		submit_args += commonFunc.makeArgs("defective_content", defective_content);
+
+	// 		const ret = commonFunc.postArgs("/check_status_button", submit_args);		
+
+	// 		location.href='/defective_list';
+	// 	}
+
+	// }	
+	
+	// function onclick() {
+	// 	$('#order_place').attr('value','');
+	// 	$('#manager').attr('value','');
+	// 	$('#order_time').attr('value','');
+	// 	$('#shipment_time').attr('value','');
+	// 	$('#request_time').attr('value','');
+	// 	$('#process').attr('value','');
+	// 	$('#order_content').attr('value','');
+	// 	$('#item').attr('value','');
+	// 	$('#qty').attr('value','');
+	// 	$('#work_key').attr('value','');
+	// }
+	
+
+	// 신규 검사 등록 값 불러오는 함수
+	function update_select(no) {
+		all_no = no;
+		console.log(no)
+		let submit_args = '';
+			submit_args += commonFunc.makeArgs("no", no);
+			const ret = commonFunc.postArgs("/defective_list_update_select", submit_args);
+			$('#update_order_key').attr('value',ret[0].order_key);
+			$('#update_request_time').attr('value',ret[0].request_time);
+			$('#update_qty').attr('value',ret[0].qty);
+			$('#update_order_qty').attr('value',ret[0].order_qty);
+			$('#update_start_time').attr('value',ret[0].start_time);
+			$('#update_end_time').attr('value',ret[0].end_time);
+			$('#update_work_key').attr('value',ret[0].work_key);
+			$('#update_item').attr('value',ret[0].item);
+			$('#update_start_time').attr('value',ret[0].start_time);
+	}
+	
+	//불량 조치 등록 눌러서 값 저장하는 함수
+	function modify(no) {
+		let submit_args = '';
+			submit_args += commonFunc.makeArgs("work_key", $("#modify_work_key").val());
+			submit_args += commonFunc.makeArgs("state", 7);
+			submit_args += commonFunc.makeArgs("defective_measure", $("#modify_defective_measure").val());
+			const ret = commonFunc.postArgs("/defective_list_modify", submit_args);
+			if(ret == 'y'){
+				alert('수정이 완료 되었습니다.');
+				location.href='/defective_list';
+			}
+	
+	}
+	
+	//불량 검사 결과 등록 값 불러오는 함수
+	function modify_select(no) {
+		all_no = no;
+		console.log(no)
+		let submit_args = '';
+			submit_args += commonFunc.makeArgs("no", no);
+			const ret = commonFunc.postArgs("/defective_list_modify_select", submit_args);
+			$('#modify_order_key').attr('value',ret[0].order_key);
+			$('#modify_request_time').attr('value',ret[0].request_time);
+			$('#modify_qty').attr('value',ret[0].qty);
+			$('#modify_order_qty').attr('value',ret[0].order_qty);
+			$('#modify_start_time').attr('value',ret[0].start_time);
+			$('#modify_end_time').attr('value',ret[0].end_time);
+			$('#modify_work_key').attr('value',ret[0].work_key);
+			$('#modify_defective_content').attr('value',ret[0].defective_content);
+	}
+	
+	// var check_list = '';
+	//   $('#chAll').on('click', function() {
+	// if ($(this).prop('checked')) {
+	// $('.chList:visible').prop('checked', true);
+	// } else {
+	// $('.chList:visible').prop('checked', false);
+	// }
+	// })
+		
+
+	
+function modal(id) {
+    var zIndex = 9999;
+    var modal = document.getElementById(id);
+
+    // 모달 div 뒤에 희끄무레한 레이어
+    var bg = document.createElement('div');
+    bg.setStyle({
+        position: 'fixed',
+        zIndex: zIndex,
+        left: '0px',
+        top: '0px',
+        width: '100%',
+        height: '100%',
+        overflow: 'auto',
+        // 레이어 색갈은 여기서 바꾸면 됨
+        backgroundColor: 'rgba(0,0,0,0.4)'
+    });
+    document.body.append(bg);
+
+    // 닫기 버튼 처리, 시꺼먼 레이어와 모달 div 지우기
+    modal.querySelector('.modal_close_btn').addEventListener('click', function() {
+        bg.remove();
+        modal.style.display = 'none';
+    });
+
+    modal.setStyle({
+        position: 'fixed',
+        display: 'block',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+
+        // 시꺼먼 레이어 보다 한칸 위에 보이기
+        zIndex: zIndex + 1,
+
+        // div center 정렬
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        msTransform: 'translate(-50%, -50%)',
+        webkitTransform: 'translate(-50%, -50%)'
+    });
+}
+
+// Element 에 style 한번에 오브젝트로 설정하는 함수 추가
+Element.prototype.setStyle = function(styles) {
+    for (var k in styles) this.style[k] = styles[k];
+    return this;
+};
+
+	
+let toggle_key = -99;
+let toggle_button = 2; //2가 off
+let toggle_button2 = 2; //2가 off
+	
+$('#button_ok').click(function(){
+	$("#tr_id").html('');
+	if(toggle_button2==2){			
+		document.getElementById('button_def').className = 'btn btn-sm btn-danger-off btn-add-ncr';
+	  	document.getElementById('button_ok').className = 'btn btn-sm btn-primary btn-add-ncr';
+		//process = $(this).val();
+		//console.log(process)
+		var innerHtml = "";									
+		
+		innerHtml += '<th class = "" style="width : 20px">'+"양품내용 입력"+'</th>';
+		innerHtml += '<th style="width : 33px" colspan="4"><input type="text" class = "form-control"  id = "input_defective_content"></th>';			
+		
+		
+		$('#tr_id').append(innerHtml);	
+		//$('#defective_list_addition').remove() 
+		toggle_button = 2;
+		toggle_button2 = 1;
+		toggle_key  = 2;
+	 } else{		 
+		 document.getElementById('button_ok').className = 'btn btn-sm btn-primary-off btn-add-ncr';
+		 document.getElementById('button_def').className = 'btn btn-sm btn-danger-off btn-add-ncr';
+		 //var str = $(this).val();
+		 //process = process.replace(str, '')
+		 console.log(process);
+		 toggle_button = 2;
+		 toggle_button2 = 2;
+		 toggle_key  = -2;
+	 }
+});
+	
+	
+	
+$('#button_def').click(function(){
+	$("#tr_id").html('');
+	if(toggle_button==2){			
+		//alert("ppppp:" + toggle_button);
+	  	document.getElementById('button_def').className = 'btn btn-sm btn-danger btn-add-ncr';
+		document.getElementById('button_ok').className = 'btn btn-sm btn-primary-off btn-add-ncr';		
+		
+		var innerHtml = "";									
+		
+		innerHtml += '<th class = "" style="width : 20px">'+"불량내용 입력"+'</th>';
+		innerHtml += '<th style="width : 33px" colspan="4"><input type="text" class = "form-control"  id = "input_defective_content"></th>';			
+		
+		
+		$('#tr_id').append(innerHtml);	
+		toggle_button = 1;
+		toggle_button2 = 2;
+		toggle_key  = 1;
+	 } else{		
+		 //alert("nnnnnnnnnn:" + toggle_button);
+		 document.getElementById('button_def').className = 'btn btn-sm btn-danger-off btn-add-ncr';		 
+		 $("#tr_id").html('');
+		 toggle_button = 2;
+		 toggle_button2 = 2;
+		 toggle_key  = -1;
+	 }
+});	
+	
+
+
+	
+	
+// $('#button_def').click(function(){
+// 	if(document.getElementById('button_def').classList == 'btn btn-sm btn-primary-off btn-add-ncr')
+// 	{		
+// 	  	document.getElementById('button_def').className = 'btn btn-sm btn-primary btn-add-ncr';
+// 		document.getElementById('button_ok').className = 'btn btn-sm btn-primary-off btn-add-ncr';		
+		
+// 		var innerHtml = "";									
+// 		innerHtml += '<tr>';
+// 		innerHtml += '<th class = "" style="width : 20px">'+"불량내용 입력"+'</th>';
+// 		innerHtml += '<th style="width : 33px" colspan="4"><input type="text" class = "form-control"  id = "input_defective_content"></th>';			
+// 		innerHtml += '</tr>';
+		
+// 		$('#table_body').append(innerHtml);		
+// 	 } else{		
+// 		 document.getElementById('button_def').className = 'btn btn-sm btn-primary-off btn-add-ncr';
+// 		 var str = $(this).val();
+// 		 process = process.replace(str, '')
+// 		 console.log(process)
+// 		 $('#defective_list_addition').remove() 
+// 	 }
+// });	
+document.getElementById('defective_list').style.background='khaki';
+</script>

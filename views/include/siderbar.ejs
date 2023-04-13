@@ -1,0 +1,284 @@
+<!-- 
+			<<li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>기준정보</span>
+                </a>
+                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="standard_code"onclick="url_change(id)">표준코드</a>
+                        <a class="collapse-item" id="standard_facility"onclick="url_change(id)">표준설비</a>
+                        <a class="collapse-item" id="standard_process"onclick="url_change(id)">표준공정</a>
+						<a class="collapse-item" id="customer_info"onclick="url_change(id)">거래처 정보</a>
+                        <a class="collapse-item" id="employee_info"onclick="url_change(id)">사원 정보</a>
+						<a class="collapse-item" id="material_dg"onclick="url_change(id)">자재 정보</a>
+                    </div>
+                </div>
+            </li>
+
+			<li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages1"
+                    aria-expanded="true" aria-controls="collapsePages1">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>프로세스 순서</span>
+                </a>
+                <div id="collapsePages1" class="collapse show" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" id="order_add"onclick="url_change(id)">수주등록</a>
+						<a class="collapse-item" id="order_con"onclick="url_change(id)">수주현황</a>
+						<a class="collapse-item" id="order_document"onclick="url_change(id)">작업지시서</a>
+						<a class="collapse-item" id="work_status"onclick="url_change(id)">작업요청</a>
+						<a class="collapse-item" id="order_document_history"onclick="url_change(id)">생산현황</a>
+						<a class="collapse-item" id="defective_list"onclick="url_change(id)">품질검사</a>
+						<a class="collapse-item" id="defective_con"onclick="url_change(id)">품질검사현황</a>
+                        <a class="collapse-item" id="shipping_add"onclick="url_change(id)">출하등록</a>
+                        <a class="collapse-item" id="shipping_con"onclick="url_change(id)">출하현황</a>
+                    </div>
+                </div>
+            </li> 
+ -->
+
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages"
+		aria-expanded="true"
+		aria-controls="collapsePages"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>기준정보</span>
+	</a>
+	<div
+		id="collapsePages"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="standard_code" onclick="url_change(id)">표준코드</a>
+			<a class="collapse-item" id="standard_facility" onclick="url_change(id)">표준설비</a>
+			<a class="collapse-item" id="standard_process" onclick="url_change(id)">표준공정</a>
+			<a class="collapse-item" id="customer_info" onclick="url_change(id)">거래처 정보</a>
+			<a class="collapse-item" id="employee_info" onclick="url_change(id)">사원 정보</a>
+			<a class="collapse-item" id="product_info" onclick="url_change(id)">품목 정보</a>
+		</div>
+	</div>
+</li>
+
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages1"
+		aria-expanded="true"
+		aria-controls="collapsePages1"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>제품 관리</span>
+	</a>
+	<div
+		id="collapsePages1"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="order_add" onclick="url_change(id)">수주등록</a>
+			<a class="collapse-item" id="order_con" onclick="url_change(id)">수주현황 </a>
+			<a class="collapse-item" id="shipping_add" onclick="url_change(id)">출하등록</a>
+			<a class="collapse-item" id="shipping_con" onclick="url_change(id)">출하현황</a>
+
+			<a class="collapse-item" id="order_bill" onclick="ing()">거래명세서</a>
+		</div>
+	</div>
+</li>
+
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages2"
+		aria-expanded="true"
+		aria-controls="collapsePages2"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>자재관리</span>
+	</a>
+	<div
+		id="collapsePages2"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="stock_manage" onclick="url_change(id)">자재관리</a>
+			<a class="collapse-item" id="inandout_manage" onclick="url_change(id)">입/출고관리</a>
+			<a class="collapse-item" id="stock_con" onclick="url_change(id)">품목별 자재현황</a>
+		</div>
+	</div>
+</li>
+
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages3"
+		aria-expanded="true"
+		aria-controls="collapsePages3"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>생산관리</span>
+	</a>
+	<div
+		id="collapsePages3"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="order_document" onclick="url_change(id)">작업지시서</a>
+			<a class="collapse-item" id="order_document_history" onclick="url_change(id)"
+				>생산현황</a
+			>
+
+			<a class="collapse-item" id="by_order" onclick="url_change(id)">수주별</a>
+			<a class="collapse-item" id="by_item" onclick="url_change(id)">품목별</a>
+			<a class="collapse-item" id="by_facility" onclick="url_change(id)">공정별</a>
+		</div>
+	</div>
+</li>
+
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages4"
+		aria-expanded="true"
+		aria-controls="collapsePages4"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>현장관리</span>
+	</a>
+	<div
+		id="collapsePages4"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="work_status" onclick="url_change(id)">작업요청</a>
+			<a class="collapse-item" id="work_history" onclick="url_change(id)">작업요청현황</a>
+		</div>
+	</div>
+</li>
+
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages5"
+		aria-expanded="true"
+		aria-controls="collapsePages5"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>설비관리</span>
+	</a>
+	<div
+		id="collapsePages5"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="status_monitoring" onclick="url_change(id)"
+				>상태모니터링</a
+			>
+			<a class="collapse-item" id="detail_con" onclick="url_change(id)">상세현황</a>
+			<a class="collapse-item" id="facility_inspect" onclick="url_change(id)">설비점검관리</a>
+			<a class="collapse-item" id="facility_con" onclick="url_change(id)">설비보전현황</a>
+		</div>
+	</div>
+</li>
+
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages6"
+		aria-expanded="true"
+		aria-controls="collapsePages6"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>품질관리</span>
+	</a>
+	<div
+		id="collapsePages6"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="defective_list" onclick="url_change(id)">품질검사</a>
+			<a class="collapse-item" id="defective_con" onclick="url_change(id)">품질검사현황</a>
+		</div>
+	</div>
+</li>
+<li class="nav-item">
+	<a
+		class="nav-link collapsed"
+		href="#"
+		data-toggle="collapse"
+		data-target="#collapsePages7"
+		aria-expanded="true"
+		aria-controls="collapsePages7"
+	>
+		<i class="fas fa-fw fa-folder"></i>
+		<span>리포트</span>
+	</a>
+	<div
+		id="collapsePages7"
+		class="collapse show"
+		aria-labelledby="headingPages"
+		data-parent="#accordionSidebar"
+	>
+		<div class="bg-white py-2 collapse-inner rounded">
+			<a class="collapse-item" id="activation_period" onclick="url_change(id)"
+				>기간별 가동율</a
+			>
+			<a class="collapse-item" id="activation_facility" onclick="url_change(id)"
+				>설비별 가동율</a
+			>
+			<a class="collapse-item" id="analysis_unactivation" onclick="url_change(id)"
+				>비가동 분석</a
+			>
+			<a class="collapse-item" id="analysis_defective" onclick="url_change(id)">불량분석</a>
+			<a class="collapse-item" id="kpi" onclick="ing()">KPI</a>
+			<a class="collapse-item" id="board" onclick="url_change(id)">게시판</a>
+		</div>
+	</div>
+</li>
+<li class="nav-item">
+	<a href="/work_log" class="nav-link collapsed">
+		<span>전환</span>
+	</a>
+	</li>
+<script>
+	const id_url = '';
+	function url_change(id) {
+		window.location.href = '/' + id;
+		id_url = id;
+	}
+
+	function ing() {
+		alert('개발중입니다.');
+	}
+</script>

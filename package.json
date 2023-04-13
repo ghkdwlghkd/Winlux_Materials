@@ -1,13 +1,25 @@
 {
   "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
+    "common": "^0.2.5",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "fs": "^0.0.1-security",
     "jszpl": "^1.1.7",
+    "multiparty": "^4.2.3",
+    "mysql": "^2.18.1",
     "mysql2": "^3.2.0",
     "net": "^1.0.2",
     "node-ptouch": "^0.0.4",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "request-ip": "^3.3.0",
+    "url": "^0.11.0",
+    "xlsx": "^0.18.5"
   }
 }
