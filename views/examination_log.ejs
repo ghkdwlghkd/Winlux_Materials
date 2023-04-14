@@ -180,7 +180,7 @@
 												<%if(row[i].state >= '3'){%>
 													<td style = 'text-align: center;'><button class="form-control" onclick='examination_save(<%=row[i].no%>)' disabled>완료</button></td>
 												<%} else if(row[i].state == '2'){%>
-													<td style = 'text-align: center;'><button class="form-control" onclick='examination_save(<%=row[i].no%>)'>등록</button></td>
+													<td style = 'text-align: center;'><button class="btn-primary form-control" onclick='examination_save(<%=row[i].no%>)'>등록</button></td>
 												<%}%>
 
 											</tr>
@@ -190,7 +190,7 @@
                                     </tbody>
                                 </table>
 								<div style="text-align:-webkit-right; margin-top:1%;">
-									<button class="form-control" onclick='ex_tbody_add()' style="width: 5%;">추가</button>	
+									<!-- <button class="btn-primary form-control" onclick='ex_tbody_add()' style="width: 5%;">추가</button>	 -->
 								</div>
 								
                             </div>
@@ -317,7 +317,7 @@
 												<td><input class="form-control" style="" type='input' id='unit_add' onchange="" value=''/></td>
 												<td><input class="form-control" style="" type='input' id='manufacturing_qty_add' onchange="" value=''/></td>
 												<td><input class="form-control" style="" type='input' id='etc_add' onchange="" value=''/></td>
-												<td style = 'text-align: center;'><button class="form-control" onclick='examination_add_save()'>추가</button></td>
+												<td style = 'text-align: center;'><button class="btn-primary form-control" onclick='examination_add_save()'>추가</button></td>
 											</tr>
 		`)
 	}

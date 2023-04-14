@@ -12,11 +12,11 @@
 			>
 				<span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
 				<!-- 로그인시 이름 넣으세요. 비로그인시 비워두면 됩니다. -->
-				<img class="img-profile rounded-circle" src="/img/undraw_profile.svg" />
+				<!-- <img class="img-profile rounded-circle" src="/img/undraw_profile.svg" /> -->
 			</a>
 			<!-- Dropdown - User Information -->
-			<div id='loginout' class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-			</div>
+			<!-- <div id='loginout' class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+			</div> -->
 			
 		</li>
 	</ul>
@@ -35,15 +35,15 @@
 		
 		console.log(access);
 		console.log(id);
-		 		  if (access == "10") {
-					  var template = `<a class="dropdown-item" href="/logout"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>로그아웃</a>
-					  				  `;
-					$("#loginout").append(template);
-				  }	else   if (access == "0") {
-					  var template = `<a class="dropdown-item" href="/login"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>로그인</a>
-					  				  `;
-					$("#loginout").append(template);
-				  }
+		 		//   if (access == "10") {
+				// 	  var template = `<a class="dropdown-item" href="/logout"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>로그아웃</a>
+				// 	  				  `;
+				// 	$("#loginout").append(template);
+				//   }	else   if (access == "0") {
+				// 	  var template = `<a class="dropdown-item" href="/login"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>로그인</a>
+				// 	  				  `;
+				// 	$("#loginout").append(template);
+				//   }
 		 
 	 });
 

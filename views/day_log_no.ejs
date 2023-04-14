@@ -146,6 +146,7 @@
                                             <th>무결점 수량</th>
                                             <th>비고</th>
 											<th></th>
+                                            <th hidden></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -157,11 +158,11 @@
 												<td style = 'text-align: center; width: 5%;'><%=row[i].item%></td>
 												<td style = 'text-align: center; width: 5%;'><%=row[i].machine_no%></td>
 												<td style = 'text-align: center; width: 10%;'><%=row[i].dateTime%></td>
-                                                <td style = 'text-align: center; width: 5%;' onclick='tr_click(<%=i%>,<%=row.length%>,<%=row[i].no%>)'><button class="form-control"><%=row[i].manufacturing_qty%></button></td>
+                                                <td style = 'text-align: center; width: 5%;' onclick='tr_click(<%=i%>,<%=row.length%>,<%=row[i].no%>)'><button class="btn-primary form-control"><%=row[i].manufacturing_qty%></button></td>
                                                 <td hidden><input tyle="hidden" class="form-control" id="manufacturing_qty_<%=row[i].no%>" value="<%=row[i].manufacturing_qty%>"></td>
 												<td style = 'text-align: center; width: 10%; display: revert;'><input class="form-control" id ="o_qty_<%=row[i].no%>" value=""></td>
 												<td style = 'text-align: center; width: 13%;'><input class="form-control" id ="etc2_<%=row[i].no%>" value=""></td>
-												<td style = 'text-align: center; width: 6%;'><button class="form-control" onclick='day_log_save(<%=row[i].no%>,`<%=row[i].item%>`,`<%=row[i].code%>`,`<%=row[i].color%>`)'>등록</button></td>
+												<td style = 'text-align: center; width: 6%;'><button class="btn-primary form-control" onclick='day_log_save(<%=row[i].no%>,`<%=row[i].item%>`,`<%=row[i].code%>`,`<%=row[i].color%>`)'>등록</button></td>
 											</tr>
 										<%}%>
                                     </tbody>
@@ -186,13 +187,13 @@
                                         <td style='text-align: center; width: 3%;'><%=i+1%></td>
                                         <td style='text-align: center; width: 8%;'><%=his[i].o_qty%></td>
                                         <td style='text-align: center; width: 8%;'><%=his[i].etc%></td>
-                                        <td style='text-align: center; width: 8%;'><button onclick="qr_insert(<%=his[i].qr%>).then(printPage)" class="form-control"><%=his[i].qr%></button></td>		<input type="hidden"id ="qr" value="<%=his[i].qr%>">
+                                        <td style='text-align: center; width: 8%;'><button onclick="qr_insert(<%=his[i].qr%>).then(printPage)" class="btn-primary form-control"><%=his[i].qr%></button></td>		<input type="hidden"id ="qr" value="<%=his[i].qr%>">
                                     </tr>
                                     <% } %>
                                     </tbody>
                                 </table>
                                 </div>
-                            </div>`;
+                            </div>
 
                         </div>
                     </div>

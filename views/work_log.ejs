@@ -154,7 +154,7 @@
 								<H4 style="width: 4%; margin-left: 3%;">부장</H4>
 								<input class="form-control" style="width: 10%;" id="user3" value="<%=row[0].user3%>">	
 								
-								<button class="form-control" style="width: 6%; margin-left: 3%;" onclick="save_today()">저장</button>
+								<button class="btn-primary form-control" style="width: 6%; margin-left: 3%;" onclick="save_today()">저장</button>
 							</div>
 							
                         </div>
@@ -249,7 +249,7 @@
 														</td>
 														<td style = 'text-align: center; width: 16%;'><input class="form-control" id ="work_op_<%=i+200%>" value="<%=op[i-101].qty%>"></td>
 														<%if(op[i-101].state == '1'){%>
-															<td style = 'text-align: center; width: 30%;'><button class="form-control" onclick='examination_add(<%=i%>)'>등록</button></td>	
+															<td style = 'text-align: center; width: 30%;'><button class="btn-primary form-control" onclick='examination_add(<%=i%>)'>등록</button></td>	
 														<%}else if(op[i-101].state == '2'){%>
 															<td style = 'text-align: center; width: 30%;'><button class="form-control" onclick='examination_add(<%=i%>)' disabled>검사중</button></td>	
 														<%}else if(op[i-101].state >= '3'){%>
